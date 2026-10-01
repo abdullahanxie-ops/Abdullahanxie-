@@ -276,6 +276,12 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
   .track { overflow-x: auto; }
   .clip { transform: none; }
 }
+/* phones: the film strip is a swipeable row that snaps card by card */
+@media (max-width: 759px) {
+  .strip .track { width: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scrollbar-width: none; padding-bottom: 6px; }
+  .strip .track::-webkit-scrollbar { display: none; }
+  .strip .card { width: 82vw; scroll-snap-align: center; }
+}
 </style>
 <meta property="og:title" content="abdullahanxie Documentaries">
 <meta property="og:description" content="Documentaries your channel can post every day. Business stories, true crime, history and science, ready to upload in 4K.">
