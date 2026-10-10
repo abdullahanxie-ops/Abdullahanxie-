@@ -11,7 +11,7 @@
 <meta property="og:title" content="Engineering & AI: Abdullah Hussain (abdullahanxie)">
 <meta property="og:description" content="Nova3D, FormaNova, image/text to CAD, AI automation pipelines and robotics.">
 <meta property="og:url" content="https://abdullahanxie.com/engineering/">
-<meta property="og:image" content="https://abdullahanxie.com/media/eng_ring.jpg">
+<meta property="og:image" content="https://abdullahanxie.com/media/eng_farm.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
 {"@type":"WebPage","@id":"https://abdullahanxie.com/engineering/#page","url":"https://abdullahanxie.com/engineering/","name":"Engineering & AI work by Abdullah Hussain","about":{"@id":"https://abdullahanxie.com/#person"},"isPartOf":{"@id":"https://abdullahanxie.com/#site"}},
@@ -19,8 +19,7 @@
 {"@type":"ScholarlyArticle","@id":"https://arxiv.org/abs/2607.22738","headline":"Nova3D: Code-Native Generation of Programmable 3D Assets","url":"https://arxiv.org/abs/2607.22738","datePublished":"2026-07-22","author":[{"@type":"Person","name":"Nimra Noor"},{"@type":"Person","name":"Muhammad Bilal"},{"@id":"https://abdullahanxie.com/#person"},{"@type":"Person","name":"Hassan Baig"}],"about":["Text-to-3D","Image-to-3D","Generative 3D","Procedural modeling"]},
 {"@type":"SoftwareApplication","name":"Nova3D","url":"https://nova3d.xyz/","applicationCategory":"DesignApplication","description":"Editable, part-aware 3D generation from text or reference images.","sameAs":"https://github.com/RareSense/Nova3D"},
 {"@type":"SoftwareApplication","name":"FormaNova CAD Studio","url":"https://formanova.ai/image-to-cad","applicationCategory":"DesignApplication","description":"AI jewelry photoshoot studio and CAD generator."},
-{"@type":"VideoObject","name":"Robot dog simulated in a Nova3D-generated digital twin","description":"A quadruped robot simulated in MuJoCo, walking through 3D environments generated with Nova3D.","thumbnailUrl":"https://abdullahanxie.com/media/eng_go2.jpg","contentUrl":"https://abdullahanxie.com/media/eng_go2.mp4","uploadDate":"2026-09-25","duration":"PT28S"},
-{"@type":"VideoObject","name":"Humanoid robot: every motor, one by one","description":"Kinematic inspection of a 39-joint humanoid robot design, driving each actuator in turn.","thumbnailUrl":"https://abdullahanxie.com/media/eng_humanoid.jpg","contentUrl":"https://abdullahanxie.com/media/eng_humanoid.mp4","uploadDate":"2026-09-24","duration":"PT78S"}
+{"@type":"VideoObject","name":"Nova3D Farm Film","description":"Humanoid robots (Unitree G1, Apptronik Apollo) harvesting apples and oranges in orchards generated with Nova3D, simulated with MuJoCo physics.","thumbnailUrl":"https://abdullahanxie.com/media/eng_farm.jpg","contentUrl":"https://abdullahanxie.com/media/eng_farm.mp4","uploadDate":"2026-10-11","duration":"PT41S"}
 ]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +48,7 @@
 
   <section class="wide" style="padding-top:0">
     <div class="wrap">
-      <figure><div class="frame "><video src="../media/eng_go2.mp4" poster="../media/eng_go2.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Robot dog walking through Nova3D-generated worlds"></video></div><figcaption>A robot dog simulated in MuJoCo, walking through worlds generated with Nova3D.</figcaption></figure>
+      <figure><div class="frame "><video src="../media/eng_farm_loop.mp4" poster="../media/eng_farm_loop.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Humanoid robots harvesting in a Nova3D orchard"></video></div><figcaption>Humanoid robots picking apples and oranges in an orchard generated with Nova3D, simulated with real physics.</figcaption></figure>
     </div>
   </section>
 
@@ -94,10 +93,14 @@
 
   <section id="robotics">
     <div class="wrap">
-      <div class="sec-head"><div><span class="label">Robotics</span><h2>Designed and tested in simulation</h2></div><p>A full humanoid program (joints, real motors and weights, battery and electronics, covers, and simulations for standing, falling, collisions and torque) and digital twins of real spaces built with Nova3D.</p></div>
-      <div class="grid g2">
-        <figure><div class="frame cine"><video src="../media/eng_humanoid.mp4" poster="../media/eng_humanoid.jpg" muted loop playsinline controls preload="none" aria-label="Humanoid robot driving each motor in turn"></video></div><figcaption>A 39-joint humanoid built from real actuators (RobStride RS04, ROBOTIS XC330), each motor driven in turn.</figcaption></figure>
-        <figure><div class="frame cine"><video src="../media/eng_go2.mp4" poster="../media/eng_go2.jpg" muted loop playsinline controls preload="none" aria-label="Robot dog in a Nova3D digital twin"></video></div><figcaption>A quadruped in MuJoCo inside Nova3D-generated environments.</figcaption></figure>
+      <div class="sec-head"><div><span class="label">Robotics</span><h2>Robots in worlds <em>Nova3D</em> builds</h2></div><p>Humanoids and quadrupeds tested in photoreal environments generated with Nova3D: orchards, vineyards, rubble fields and stream beds, with real physics and trained walking policies.</p></div>
+      <figure>
+        <div class="frame cine"><video src="../media/eng_farm.mp4" poster="../media/eng_farm.jpg" controls playsinline preload="none" aria-label="Nova3D Farm Film"></video></div>
+        <div class="cap"><b>Nova3D Farm Film</b><span>Unitree G1 and Apptronik Apollo harvesting apples and oranges · MuJoCo physics · environments generated with Nova3D</span></div>
+      </figure>
+      <div class="grid g2" style="margin-top:clamp(18px,2.4vw,30px)">
+        <figure><div class="frame cine"><video src="../media/eng_dog.mp4" poster="../media/eng_dog.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Quadruped robot crossing rubble and a stream bed"></video></div><figcaption>A quadruped crossing rubble and a stream bed in Nova3D-generated terrain.</figcaption></figure>
+        <figure><div class="frame cine"><video src="../media/eng_game.mp4" poster="../media/eng_game.jpg" muted loop playsinline autoplay preload="metadata" aria-label="First-person game level at sunset"></video></div><figcaption>Game development: a first-person level I built, city at sunset.</figcaption></figure>
       </div>
     </div>
   </section>
