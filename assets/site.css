@@ -150,3 +150,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 footer a:hover { color: var(--fg); }
 .span2 .frame.land { aspect-ratio: 33 / 10; }
 @media (max-width: 900px) { .span2 .frame.land { aspect-ratio: 16 / 10; } }
+
+/* natural-ratio gallery (photos keep their own proportions, never cropped) */
+.masonry { columns: 3 280px; column-gap: clamp(10px, 1.4vw, 18px); }
+.masonry figure { break-inside: avoid; margin: 0 0 clamp(10px, 1.4vw, 18px); }
+.masonry img { width: 100%; height: auto; background: var(--bg-2); }
