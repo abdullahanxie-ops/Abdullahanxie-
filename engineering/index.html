@@ -48,7 +48,7 @@
 
   <section class="wide" style="padding-top:0">
     <div class="wrap">
-      <figure><div class="frame "><video src="../media/eng_farm_loop.mp4" poster="../media/eng_farm_loop.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Humanoid robots harvesting in a Nova3D orchard"></video></div><figcaption>Humanoid robots picking apples and oranges in an orchard generated with Nova3D, simulated with real physics.</figcaption></figure>
+      <figure><div class="frame "><video src="../media/eng_farm_loop.mp4" poster="../media/eng_farm_loop.jpg" muted loop playsinline webkit-playsinline autoplay disablepictureinpicture preload="metadata" aria-label="Humanoid robots harvesting in a Nova3D orchard"></video></div><figcaption>Humanoid robots picking apples and oranges in an orchard generated with Nova3D, simulated with real physics.</figcaption></figure>
     </div>
   </section>
 
@@ -99,8 +99,8 @@
         <div class="cap"><b>Nova3D Farm Film</b><span>Unitree G1 and Apptronik Apollo harvesting apples and oranges · MuJoCo physics · environments generated with Nova3D</span></div>
       </figure>
       <div class="grid g2" style="margin-top:clamp(18px,2.4vw,30px)">
-        <figure><div class="frame cine"><video src="../media/eng_dog.mp4" poster="../media/eng_dog.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Quadruped robot crossing rubble and a stream bed"></video></div><figcaption>A quadruped crossing rubble and a stream bed in Nova3D-generated terrain.</figcaption></figure>
-        <figure><div class="frame cine"><video src="../media/eng_game.mp4" poster="../media/eng_game.jpg" muted loop playsinline autoplay preload="metadata" aria-label="First-person game level at sunset"></video></div><figcaption>Game development: a first-person level I built, city at sunset.</figcaption></figure>
+        <figure><div class="frame cine"><video src="../media/eng_dog.mp4" poster="../media/eng_dog.jpg" muted loop playsinline webkit-playsinline autoplay disablepictureinpicture preload="metadata" aria-label="Quadruped robot crossing rubble and a stream bed"></video></div><figcaption>A quadruped crossing rubble and a stream bed in Nova3D-generated terrain.</figcaption></figure>
+        <figure><div class="frame cine"><video src="../media/eng_game.mp4" poster="../media/eng_game.jpg" muted loop playsinline webkit-playsinline autoplay disablepictureinpicture preload="metadata" aria-label="First-person game level at sunset"></video></div><figcaption>Game development: a first-person level I built, city at sunset.</figcaption></figure>
       </div>
     </div>
   </section>
@@ -145,6 +145,19 @@ document.querySelectorAll("a.yt[data-yt]").forEach(a => a.addEventListener("clic
   f.title = a.getAttribute("aria-label"); f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen = true;
   a.replaceWith(f);
 }));
+(() => {
+  const phone = matchMedia("(max-width: 760px)").matches;
+  const vids = [...document.querySelectorAll("video[autoplay]")];
+  vids.forEach(v => {
+    if (phone && v.dataset.mobile) { v.poster = v.dataset.mposter || v.poster; v.src = v.dataset.mobile; }
+    v.muted = true; v.defaultMuted = true; v.playsInline = true;
+    const p = v.play(); if (p) p.then(() => v.classList.remove("noplay")).catch(() => v.classList.add("noplay"));
+  });
+  const retry = () => vids.forEach(v => { if (v.paused) v.play().then(() => v.classList.remove("noplay")).catch(() => {}); });
+  addEventListener("touchstart", retry, { once: true, passive: true });
+  addEventListener("scroll", retry, { once: true, passive: true });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) retry(); });
+})();
 </script>
 </body>
 </html>

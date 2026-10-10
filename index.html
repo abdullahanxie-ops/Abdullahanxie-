@@ -48,7 +48,7 @@
 
 <main>
   <header class="hero">
-    <video src="media/reel.mp4" poster="media/reel.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+    <video src="media/reel.mp4" poster="media/reel.jpg" data-mobile="media/reel_m.mp4" data-mposter="media/reel_m.jpg" muted loop playsinline webkit-playsinline autoplay disablepictureinpicture disableremoteplayback preload="metadata" aria-hidden="true"></video>
     <div class="wrap">
       <span class="label">abdullahanxie</span>
       <h1 class="display" style="margin-top:14px">Abdullah<br>Hussain</h1>
@@ -159,6 +159,19 @@ document.querySelectorAll("a.yt[data-yt]").forEach(a => a.addEventListener("clic
   f.title = a.getAttribute("aria-label"); f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen = true;
   a.replaceWith(f);
 }));
+(() => {
+  const phone = matchMedia("(max-width: 760px)").matches;
+  const vids = [...document.querySelectorAll("video[autoplay]")];
+  vids.forEach(v => {
+    if (phone && v.dataset.mobile) { v.poster = v.dataset.mposter || v.poster; v.src = v.dataset.mobile; }
+    v.muted = true; v.defaultMuted = true; v.playsInline = true;
+    const p = v.play(); if (p) p.then(() => v.classList.remove("noplay")).catch(() => v.classList.add("noplay"));
+  });
+  const retry = () => vids.forEach(v => { if (v.paused) v.play().then(() => v.classList.remove("noplay")).catch(() => {}); });
+  addEventListener("touchstart", retry, { once: true, passive: true });
+  addEventListener("scroll", retry, { once: true, passive: true });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) retry(); });
+})();
 </script>
 </body>
 </html>

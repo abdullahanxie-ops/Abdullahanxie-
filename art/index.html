@@ -36,7 +36,7 @@
 
 <main>
   <header class="hero">
-    <video src="../media/reel.mp4" poster="../media/reel.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+    <video src="../media/reel.mp4" poster="../media/reel.jpg" data-mobile="../media/reel_m.mp4" data-mposter="../media/reel_m.jpg" muted loop playsinline webkit-playsinline autoplay disablepictureinpicture disableremoteplayback preload="metadata" aria-hidden="true"></video>
     <div class="wrap">
       <span class="label">Art &amp; athletics</span>
       <h1 class="display" style="margin-top:14px;font-size:clamp(3rem,8vw,7.4rem)">Films, drawings<br>&amp; <em>open air.</em></h1>
@@ -120,7 +120,7 @@
     <div class="wrap">
       <div class="sec-head"><div><span class="label">Athletics</span><h2>Horseback and on foot</h2></div><p>Horse riding, trekking, running, football and calisthenics. The discipline that gets me up a mountain is the same one that finishes a film.</p></div>
       <div class="grid g3">
-        <figure><div class="frame tall"><video src="../media/nf_horse_pov.mp4" poster="../media/nf_horse_pov.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Riding at sunrise, seen from the saddle"></video></div><figcaption>Sunrise ride, from the saddle</figcaption></figure>
+        <figure><div class="frame tall"><video src="../media/nf_horse_pov.mp4" poster="../media/nf_horse_pov.jpg" muted loop playsinline webkit-playsinline autoplay disablepictureinpicture preload="metadata" aria-label="Riding at sunrise, seen from the saddle"></video></div><figcaption>Sunrise ride, from the saddle</figcaption></figure>
         <figure><div class="frame tall"><img src="../media/nf_horse_black.jpg" alt="Riding a black horse" loading="lazy"></div><figcaption>Schooling a black horse</figcaption></figure>
         <figure><div class="frame tall"><img src="../media/nf_horse_grazing.jpg" alt="A grey horse grazing" loading="lazy"></div><figcaption>After the ride</figcaption></figure>
         <figure class="span2"><div class="frame land"><img src="../media/nf_horse_sil2.jpg" alt="Riding across a misty field" loading="lazy"></div><figcaption>Morning field</figcaption></figure>
@@ -156,6 +156,19 @@ document.querySelectorAll("a.yt[data-yt]").forEach(a => a.addEventListener("clic
   f.title = a.getAttribute("aria-label"); f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen = true;
   a.replaceWith(f);
 }));
+(() => {
+  const phone = matchMedia("(max-width: 760px)").matches;
+  const vids = [...document.querySelectorAll("video[autoplay]")];
+  vids.forEach(v => {
+    if (phone && v.dataset.mobile) { v.poster = v.dataset.mposter || v.poster; v.src = v.dataset.mobile; }
+    v.muted = true; v.defaultMuted = true; v.playsInline = true;
+    const p = v.play(); if (p) p.then(() => v.classList.remove("noplay")).catch(() => v.classList.add("noplay"));
+  });
+  const retry = () => vids.forEach(v => { if (v.paused) v.play().then(() => v.classList.remove("noplay")).catch(() => {}); });
+  addEventListener("touchstart", retry, { once: true, passive: true });
+  addEventListener("scroll", retry, { once: true, passive: true });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) retry(); });
+})();
 </script>
 </body>
 </html>
