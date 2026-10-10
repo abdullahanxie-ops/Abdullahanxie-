@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abdullahanxie | Documentary Video Editor for YouTube Channels</title>
+<meta name="description" content="Abdullahanxie makes faceless YouTube documentaries: business stories, true crime, history and science, with 3D scenes in Blender, ready to upload in 4K. Videos in batches, as many per day as you need.">
+<link rel="canonical" href="https://abdullahanxie.com/video/">
+<meta property="og:url" content="https://abdullahanxie.com/video/">
+<meta property="og:site_name" content="Abdullahanxie">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://abdullahanxie.com/#person","name":"Abdullahanxie","alternateName":["abdullahanxie","Abdullah Anxie"],"jobTitle":"Documentary video editor","url":"https://abdullahanxie.com/","sameAs":["https://www.instagram.com/abdullahanxie/"],"knowsAbout":["Video editing","YouTube documentaries","Blender 3D","Motion graphics","True crime videos"]},{"@type":"ProfessionalService","@id":"https://abdullahanxie.com/#service","name":"Abdullahanxie Documentaries","url":"https://abdullahanxie.com/","description":"Abdullahanxie makes faceless YouTube documentaries: business stories, true crime, history and science, with 3D scenes in Blender, ready to upload in 4K. Videos in batches, as many per day as you need.","founder":{"@id":"https://abdullahanxie.com/#person"},"image":"https://abdullahanxie.com/media/og.jpg","areaServed":"Worldwide","telephone":"+923155081120"},{"@type":"WebSite","@id":"https://abdullahanxie.com/#site","name":"Abdullahanxie","url":"https://abdullahanxie.com/"}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* The page plays like a film: a fixed glass player bar keeps timecode and chapters as you
+   scroll; each section is a scene (cold open, film strip, batch counter, split screen,
+   edit timeline, end credits). */
+:root {
+  --bg: #050506;
+  --fg: #f5f4f1;
+  --muted: #a6a39d;
+  --accent: #f5b544;      /* tungsten */
+  --rose: #ff6b8b;
+  --indigo: #6c7dff;
+  --glass: rgba(255,255,255,.065);
+  --glass-strong: rgba(255,255,255,.11);
+  --glass-line: rgba(255,255,255,.16);
+  --display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --gutter: clamp(16px, 4vw, 56px);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 1rem/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
+.wrap { padding-inline: var(--gutter); max-width: 1640px; margin-inline: auto; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.cond { font-variation-settings: "wdth" 70; }
+
+/* glass */
+.glass {
+  position: relative; background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px;
+  backdrop-filter: blur(22px) saturate(170%); -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(255,255,255,.04), 0 24px 70px rgba(0,0,0,.5);
+}
+.glass::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,0) 38%, rgba(255,255,255,0) 70%, rgba(255,255,255,.06)); }
+
+/* ambient orbs */
+.orbs { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.orb { position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%; filter: blur(70px); opacity: .5; mix-blend-mode: screen; animation: drift 22s ease-in-out infinite alternate; }
+.orb.a { background: radial-gradient(circle, var(--accent), transparent 62%); left: -10vmax; top: 5%; }
+.orb.b { background: radial-gradient(circle, var(--rose), transparent 62%); right: -14vmax; top: 30%; animation-duration: 27s; opacity: .35; }
+.orb.c { background: radial-gradient(circle, var(--indigo), transparent 62%); left: 30%; bottom: -20vmax; animation-duration: 31s; opacity: .4; }
+@keyframes drift { 0% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(6vw,-4vh,0) scale(1.12); } 100% { transform: translate3d(-4vw,5vh,0) scale(.94); } }
+
+/* film grain */
+.grain { position: fixed; inset: -50%; z-index: 90; pointer-events: none; opacity: .06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1s steps(6) infinite; }
+@keyframes grain { 0%{transform:translate(0,0)} 20%{transform:translate(-3%,2%)} 40%{transform:translate(2%,-3%)} 60%{transform:translate(-2%,3%)} 80%{transform:translate(3%,1%)} 100%{transform:translate(0,0)} }
+
+/* nav */
+.nav { position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 18px; border-radius: 999px; max-width: calc(100vw - 24px); }
+.brand { font: 800 1.05rem/1 var(--display); text-transform: uppercase; letter-spacing: .02em; text-decoration: none; margin-right: 10px; white-space: nowrap; }
+.brand span { color: var(--accent); }
+.nav a.l { text-decoration: none; font-size: .9rem; color: #dcd9d3; padding: 8px 12px; border-radius: 999px; }
+.nav a.l:hover { background: var(--glass-strong); color: #fff; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 10px 20px; font: 700 .92rem/1 var(--body); cursor: pointer; text-decoration: none; white-space: nowrap; transition: transform .2s, background .2s, box-shadow .2s; }
+.btn svg { width: 18px; height: 18px; }
+.btn.gold { background: var(--accent); color: #1b1305; box-shadow: 0 0 0 0 rgba(245,181,68,.5); }
+.btn.gold:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(245,181,68,.35); }
+.btn.white { background: #fff; color: #0a0a0a; }
+.btn.white:hover { background: #e9e7e2; }
+.btn.clear { background: var(--glass-strong); color: #fff; border: 1px solid var(--glass-line); }
+.btn.sm { padding: 9px 16px; font-size: .88rem; }
+@media (max-width: 820px) { .nav a.l { display: none; } }
+
+/* player bar */
+.player { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; width: min(760px, calc(100vw - 24px)); display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 12px; padding: 7px 14px 7px 7px; border-radius: 14px; }
+.pbtn { width: 32px; height: 32px; border-radius: 50%; border: 0; background: #fff; color: #0a0a0a; display: grid; place-items: center; cursor: pointer; }
+.pbtn svg { width: 16px; height: 16px; }
+.chap { display: grid; line-height: 1.15; min-width: 0; }
+.chap small { color: var(--muted); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+.chap b { font-size: .85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 22ch; }
+.scrub { position: relative; height: 26px; cursor: pointer; }
+.scrub .rail { position: absolute; left: 0; right: 0; top: 11px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.14); overflow: hidden; }
+.scrub .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, var(--accent), var(--rose)); }
+.scrub .tick { position: absolute; top: 7px; width: 2px; height: 12px; border-radius: 2px; background: rgba(255,255,255,.45); }
+.tc { font-size: .76rem; color: #e9e6df; }
+.tc span { color: var(--muted); }
+@media (max-width: 640px) { .player { grid-template-columns: auto 1fr auto; } .chap { display: none; } .tc span { display: none; } }
+
+/* scene 1: cold open */
+.open { position: relative; }
+.open .stage { position: relative; height: 100vh; height: 100svh; min-height: 620px; overflow: hidden; display: grid; place-items: center; }
+.open video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); }
+.open .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(5,5,6,.15), rgba(5,5,6,.75) 75%), linear-gradient(0deg, var(--bg), rgba(5,5,6,0) 30%); }
+.bars::before, .bars::after { content: ""; position: absolute; left: 0; right: 0; height: 50.5%; background: #000; z-index: 3; transition: transform 1.4s cubic-bezier(.7,0,.2,1) .25s; }
+.bars::before { top: 0; transform: translateY(var(--bar, 0%)); }
+.bars::after { bottom: 0; transform: translateY(calc(var(--bar, 0%) * -1)); }
+.cold { position: absolute; z-index: 4; text-align: center; padding-inline: var(--gutter); font: 600 clamp(1.1rem, 2.4vw, 1.6rem)/1.3 var(--body); color: #e9e6df; letter-spacing: .02em; }
+.cold .mono { display: block; color: var(--accent); font-size: .8rem; letter-spacing: .3em; margin-bottom: 14px; }
+.headline { position: relative; z-index: 2; width: 100%; padding-inline: var(--gutter); max-width: 1440px; }
+.headline h1 { font-size: clamp(2rem, 4.2vw, 4.2rem); font-weight: 900; line-height: .9; text-transform: uppercase; font-variation-settings: "wdth" 70; letter-spacing: -.005em; max-width: 13ch; }
+.headline h1 .w { display: inline-block; opacity: .08; transform: translateY(.18em); filter: blur(8px); transition: opacity .5s, transform .5s, filter .5s; }
+.headline h1 .w.on { opacity: 1; transform: none; filter: none; }
+.headline h1 .w.gold { color: var(--accent); }
+.hcard { position: absolute; z-index: 3; right: var(--gutter); bottom: 110px; width: min(360px, calc(100vw - 32px)); padding: 18px; display: grid; gap: 14px; opacity: 0; transform: translateY(30px); transition: opacity .6s, transform .6s; }
+.hcard.on { opacity: 1; transform: none; }
+.hcard p { margin: 0; color: #e4e1db; font-size: .95rem; }
+.hcard .row { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 760px) { .cue { display: none; } .hcard { right: 16px; left: 16px; width: auto; bottom: 92px; } .open .stage { place-items: start center; } .headline { padding-top: 104px; } .headline h1 { font-size: 2.3rem; } }
+.cue { position: absolute; z-index: 4; bottom: 100px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; display: grid; justify-items: center; gap: 8px; }
+.cue i { width: 1px; height: 36px; background: linear-gradient(var(--accent), transparent); animation: cue 1.6s ease-in-out infinite; }
+@keyframes cue { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+/* section heads */
+.scene-label { display: inline-flex; align-items: center; gap: 10px; font: 500 .78rem/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+.scene-label::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px var(--accent); }
+.big { font-size: clamp(1.7rem, 3.4vw, 3rem); font-weight: 900; line-height: .95; text-transform: uppercase; font-variation-settings: "wdth" 70; }
+.big em { font-style: normal; color: var(--accent); }
+.lede { color: #d9d6d0; font-size: 1rem; max-width: 56ch; margin: 0; }
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* scene 2: film strip */
+.strip { position: relative; height: 280vh; }
+.strip .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; padding-top: 96px; }
+.ambient { position: absolute; inset: -10%; background-size: cover; background-position: center; filter: blur(60px) saturate(160%) brightness(.55); transition: background-image .6s; z-index: 0; }
+.strip .stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg), rgba(5,5,6,.35) 25%, rgba(5,5,6,.35) 75%, var(--bg)); z-index: 0; }
+.strip .head { position: relative; z-index: 2; max-width: none; margin-inline: 0; flex-direction: column; align-items: flex-start !important; display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 40px; }
+.strip .head h2 { font-size: clamp(1.25rem, 1.9vw, 1.75rem); font-weight: 800; font-variation-settings: "wdth" 92; line-height: 1.1; }
+.track { position: relative; z-index: 2; width: max-content; display: flex; gap: clamp(16px, 2.4vw, 32px); align-items: center; padding-inline: var(--gutter); will-change: transform; }
+.card { flex: 0 0 auto; width: clamp(280px, 27vw, 520px); padding: 10px; display: grid; gap: 12px; border-radius: 16px; }
+.screen { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: #111; border: 0; padding: 0; cursor: pointer; color: inherit; }
+.screen img, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2,.7,.2,1), opacity .4s; }
+.screen video { opacity: 0; }
+.screen.playing video { opacity: 1; }
+.card:hover .screen img, .card:hover .screen video { transform: scale(1.05); }
+.screen .play { position: absolute; left: 10px; bottom: 10px; z-index: 2; display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px 7px 9px; border-radius: 999px; font-weight: 700; font-size: .82rem; }
+.screen .play svg { width: 14px; height: 14px; }
+.screen .tag { position: absolute; right: 8px; top: 8px; z-index: 2; padding: 4px 8px; border-radius: 999px; font: 600 .72rem/1 var(--body); letter-spacing: .06em; text-transform: uppercase; }
+.card .meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 16px; align-items: baseline; padding: 0 4px 4px; }
+.card .num { grid-row: span 2; font: 900 2.6rem/.8 var(--display); font-variation-settings: "wdth" 66; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.55); }
+.card h3 { font-size: 1.15rem; font-weight: 700; font-variation-settings: "wdth" 95; line-height: 1.25; }
+.card .meta p { margin: 0; color: var(--muted); font-size: .88rem; }
+.card .meta p span { font-family: var(--mono); color: #d9d6d0; }
+
+/* scene 3: batches */
+.batch { position: relative; padding-block: clamp(70px, 9vw, 120px); overflow: hidden; }
+.batch .grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 5vw, 80px); align-items: center; }
+@media (max-width: 900px) { .batch .grid { grid-template-columns: 1fr; } }
+.counter { display: grid; gap: 6px; margin-top: 26px; }
+.counter .n { font: 900 clamp(3rem, 6.5vw, 5.5rem)/.85 var(--display); font-variation-settings: "wdth" 62; background: linear-gradient(180deg, #fff, #ffd38a 55%, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
+.counter small { color: var(--muted); letter-spacing: .14em; text-transform: uppercase; font-size: .8rem; }
+.stack { position: relative; height: clamp(260px, 28vw, 360px); }
+.stack .sheet { position: absolute; left: 50%; top: 50%; width: min(70%, 300px); aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; translate: -50% -50%; transition: transform .9s cubic-bezier(.2,.7,.2,1), opacity .9s; }
+.stack .sheet img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .9; }
+.stack .sheet b { position: absolute; left: 12px; bottom: 10px; font: 500 .72rem/1 var(--mono); letter-spacing: .12em; padding: 6px 8px; border-radius: 6px; background: rgba(0,0,0,.55); }
+.chips { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.chip { padding: 10px 14px; border-radius: 12px; display: grid; gap: 2px; }
+.chip b { font-size: .9rem; }
+.chip span { color: var(--muted); font-size: .85rem; }
+
+/* scene 4: featured full documentaries */
+.feat-sec { position: relative; padding-block: clamp(60px, 7vw, 100px); }
+.feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(18px, 2.5vw, 32px); margin-top: clamp(24px, 3vw, 40px); }
+@media (max-width: 860px) { .feat-grid { grid-template-columns: 1fr; } }
+.feat { padding: 10px; border-radius: 16px; display: grid; gap: 12px; align-content: start; }
+.feat:hover .screen img, .feat:hover .screen video { transform: scale(1.04); }
+.feat .meta { display: grid; gap: 6px; padding: 0 6px 6px; }
+.feat h3 { font-size: clamp(1.15rem, 1.6vw, 1.45rem); font-weight: 700; line-height: 1.25; }
+.feat .meta p { margin: 0; color: var(--muted); font-size: .9rem; }
+.feat .meta p span { font-family: var(--mono); color: #d9d6d0; }
+.feat .full { color: var(--accent); font-weight: 600; font-size: .9rem; text-decoration: none; width: fit-content; }
+.feat .full:hover { text-decoration: underline; }
+/* scene 4 (old): split screen */
+.split-sec { position: relative; padding-block: clamp(60px, 7vw, 100px); }
+.split { position: relative; aspect-ratio: 16 / 9; width: 100%; border-radius: 16px; overflow: hidden; margin-top: 0; cursor: ew-resize; touch-action: pan-y; user-select: none; }
+.split video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.split .right { clip-path: inset(0 0 0 var(--cut, 50%)); }
+.split .handle { position: absolute; top: 0; bottom: 0; left: var(--cut, 50%); width: 2px; background: #fff; transform: translateX(-1px); box-shadow: 0 0 20px rgba(255,255,255,.6); }
+.split .knob { position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; }
+.split .lab { position: absolute; top: 16px; z-index: 2; padding: 8px 14px; border-radius: 999px; font: 700 .82rem/1 var(--body); letter-spacing: .06em; text-transform: uppercase; background: rgba(10,10,12,.62); color: #fff; }
+.split .lab.l { left: 16px; } .split .lab.r { right: 16px; }
+.split-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; padding: 8px; border-radius: 14px; width: 100%; }
+.split-grid { display: grid; grid-template-columns: minmax(260px, .85fr) 2.15fr; gap: clamp(24px, 3.5vw, 56px); align-items: center; }
+.split-grid > * { min-width: 0; }
+@media (max-width: 1000px) { .split-grid { grid-template-columns: 1fr; } }
+.split-bar input { flex: 1 1 220px; accent-color: var(--accent); min-width: 0; }
+.split-bar .mono { color: var(--muted); font-size: .85rem; padding-right: 8px; }
+
+/* scene 5: edit timeline */
+.edit { position: relative; padding-block: clamp(60px, 7vw, 100px); }
+.nle { margin-top: 34px; padding: 16px; border-radius: 22px; overflow: hidden; }
+.ruler { position: relative; height: 34px; margin-left: 74px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.ruler .mk { position: absolute; top: 0; font: 500 .7rem/1 var(--mono); color: var(--muted); padding-left: 6px; border-left: 1px solid rgba(255,255,255,.25); height: 100%; display: flex; align-items: center; }
+.ruler .mk b { color: var(--fg); font-family: var(--body); font-weight: 700; font-size: .78rem; margin-left: 6px; }
+.tracks { position: relative; display: grid; gap: 8px; padding-top: 10px; }
+.trk { display: grid; grid-template-columns: 66px 1fr; gap: 8px; align-items: center; }
+.trk > span { font: 500 .72rem/1 var(--mono); color: var(--muted); text-align: right; padding-right: 6px; }
+.lane { position: relative; height: 46px; border-radius: 8px; background: rgba(255,255,255,.035); }
+.clip { position: absolute; top: 4px; bottom: 4px; border-radius: 7px; padding: 0 10px; display: flex; align-items: center; overflow: hidden; font-size: .78rem; font-weight: 700; white-space: nowrap; transform-origin: left center; transform: scaleX(0); transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+.clip.in { transform: scaleX(1); }
+.clip.v2 { background: linear-gradient(90deg, rgba(108,125,255,.85), rgba(108,125,255,.55)); }
+.clip.v1 { background: linear-gradient(90deg, rgba(245,181,68,.9), rgba(245,181,68,.6)); color: #1b1305; }
+.clip.a1 { background: rgba(255,107,139,.22); border: 1px solid rgba(255,107,139,.6); color: #ffd3dc; }
+.clip.a2 { background: rgba(94,214,160,.18); border: 1px solid rgba(94,214,160,.55); color: #c9f5e1; }
+.clip svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .9; }
+.clip em { position: relative; font-style: normal; }
+.playhead { position: absolute; top: -44px; bottom: 0; left: 74px; width: 2px; background: var(--rose); box-shadow: 0 0 12px var(--rose); z-index: 3; pointer-events: none; }
+.playhead::before { content: ""; position: absolute; top: 0; left: -6px; width: 14px; height: 12px; background: var(--rose); clip-path: polygon(0 0, 100% 0, 50% 100%); }
+.steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 18px; }
+@media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } .ruler .mk b { display: none; } }
+.step { padding: 16px; border-radius: 16px; display: grid; gap: 6px; }
+.step b { font-size: 1rem; }
+.step span { color: var(--muted); font-size: .88rem; }
+
+/* scene 6: end credits */
+.credits { position: relative; padding-block: clamp(70px, 9vw, 120px) 140px; overflow: hidden; }
+.roll { text-align: center; display: grid; gap: 10px; margin-bottom: clamp(50px, 8vw, 100px); }
+.roll small { color: var(--muted); letter-spacing: .3em; text-transform: uppercase; font-size: .78rem; }
+.roll strong { font: 900 clamp(1.6rem, 3.4vw, 3rem)/1 var(--display); text-transform: uppercase; font-variation-settings: "wdth" 70; }
+.roll strong.gold { color: var(--accent); }
+.deal { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 56px); align-items: start; }
+@media (max-width: 900px) { .deal { grid-template-columns: 1fr; } }
+.contact { display: grid; gap: 12px; padding: 22px; }
+.contact .mail { font: 500 1rem/1 var(--mono); padding: 14px; border-radius: 12px; background: rgba(0,0,0,.35); user-select: all; overflow-wrap: anywhere; }
+.contact .row { display: flex; flex-wrap: wrap; gap: 10px; }
+.contact a.s { display: inline-flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 14px; text-decoration: none; font-weight: 600; background: rgba(255,255,255,.08); border: 1px solid var(--glass-line); }
+.contact a.s span { color: var(--muted); font-weight: 500; }
+.contact a.s svg { width: 18px; height: 18px; }
+.status { min-height: 1.4em; color: var(--accent); font-size: .92rem; margin: 0; }
+.qform { padding: clamp(18px, 3vw, 28px); display: grid; gap: 14px; }
+.qform h3 { font-size: 1.2rem; font-weight: 800; font-variation-settings: "wdth" 90; }
+.qform label { display: grid; gap: 6px; font-size: .86rem; font-weight: 600; color: #dcd9d3; min-width: 0; }
+.qform input, .qform textarea, .qform select { width: 100%; min-width: 0; font: 400 1rem/1.4 var(--body); color: var(--fg); background: rgba(0,0,0,.35); border: 1px solid var(--glass-line); border-radius: 12px; padding: 12px; }
+.qform textarea { resize: vertical; }
+.qform input:focus, .qform textarea:focus, .qform select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(245,181,68,.15); }
+.qform ::placeholder { color: #77746e; }
+.qform .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .qform .two { grid-template-columns: 1fr; } }
+.qform .btn[disabled] { opacity: .6; cursor: progress; }
+.qform .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.qform.sent .status { color: #7ee2a8; }
+footer { position: relative; z-index: 2; text-align: center; color: var(--muted); font-size: .85rem; padding: 0 var(--gutter) 120px; }
+
+/* detail player */
+dialog { width: min(1000px, calc(100vw - 24px)); max-height: calc(100vh - 24px); padding: 0; border: 1px solid var(--glass-line); border-radius: 22px; background: rgba(18,18,20,.82); backdrop-filter: blur(30px) saturate(160%); -webkit-backdrop-filter: blur(30px) saturate(160%); color: var(--fg); overflow: auto; box-shadow: 0 40px 120px rgba(0,0,0,.75); }
+dialog::backdrop { background: rgba(0,0,0,.6); backdrop-filter: blur(6px); }
+dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+.sheet2 { padding: clamp(18px, 3vw, 30px); display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px 30px; }
+@media (max-width: 700px) { .sheet2 { grid-template-columns: 1fr; } }
+.sheet2 h2 { grid-column: 1 / -1; font-size: clamp(1.7rem, 3.6vw, 2.5rem); font-weight: 900; font-variation-settings: "wdth" 84; }
+.sheet2 .m { color: var(--accent); font: 500 .85rem/1 var(--mono); }
+.sheet2 p { margin: 10px 0 0; color: #dcd9d3; }
+.sheet2 dl { margin: 0; font-size: .92rem; display: grid; gap: 4px; align-content: start; }
+.sheet2 dt { color: var(--muted); }
+.sheet2 dd { margin: 0 0 8px; }
+.x { position: absolute; top: 12px; right: 12px; z-index: 2; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--glass-line); background: rgba(0,0,0,.55); color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+
+/* toolkit marquee */
+.toolkit { position: relative; padding-block: clamp(60px, 7vw, 100px); overflow: hidden; }
+.toolkit .rows { display: grid; gap: 14px; margin-top: 30px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.marquee { display: flex; gap: 14px; width: max-content; margin: 0; padding: 4px 0; list-style: none; animation: slide 46s linear infinite; }
+.marquee.r { animation-direction: reverse; animation-duration: 52s; }
+.toolkit .rows:hover .marquee { animation-play-state: paused; }
+@keyframes slide { to { transform: translateX(-50%); } }
+.tool { flex: 0 0 auto; width: 168px; padding: 18px 16px 16px; border-radius: 16px; display: grid; justify-items: start; gap: 4px; color: #e6e3dd; transition: color .3s, transform .3s, box-shadow .3s; }
+.tool svg { width: 34px; height: 34px; margin-bottom: 10px; transition: filter .3s; }
+.tool b { font-size: .92rem; }
+.tool span { color: var(--muted); font-size: .78rem; }
+.tool:hover { color: var(--brand); transform: translateY(-4px); box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 18px 50px rgba(0,0,0,.55); }
+.tool:hover svg { filter: drop-shadow(0 0 12px var(--brand)); }
+.tool:hover b { color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee { animation: none; }
+  .orb, .grain, .cue i { animation: none; }
+  .open, .strip { height: auto; }
+  .open .stage, .strip .stage { position: relative; height: auto; min-height: 100vh; }
+  .headline h1 .w { opacity: 1; transform: none; filter: none; }
+  .bars::before, .bars::after { display: none; }
+  .hcard, .reveal { opacity: 1; transform: none; }
+  .track { overflow-x: auto; }
+  .clip { transform: none; }
+}
+/* phones: the film strip is a swipeable row that snaps card by card */
+@media (max-width: 759px) {
+  .strip .track { width: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scrollbar-width: none; padding-bottom: 6px; }
+  .strip .track::-webkit-scrollbar { display: none; }
+  .strip .card { width: 82vw; scroll-snap-align: center; }
+}
+</style>
+<meta property="og:title" content="Abdullahanxie | Documentary Video Editor for YouTube Channels">
+<meta property="og:description" content="Documentaries your channel can post every day. Business stories, true crime, history and science, ready to upload in 4K.">
+<meta property="og:image" content="https://abdullahanxie.com/media/og.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230c0f12'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23ffb347'/%3E%3C/svg%3E">
+<script src="../assets/app.js"></script>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav glass" aria-label="Sections">
+  <a class="brand" href="#top">abdullah<span>anxie</span></a>
+  <a class="l" href="#work">Work</a>
+  <a class="l" href="#batches">Batches</a>
+  <a class="l" href="#featured">Featured</a>
+  <a class="l" href="#process">Process</a>
+  <a class="l" href="#toolkit">Tools</a>
+  <a class="btn gold sm" href="#quote">Get a quote</a>
+</nav>
+
+<main id="top">
+  <!-- Scene 1: the showreel plays on its own -->
+  <section class="open" id="open" data-chapter="Showreel">
+    <div class="stage bars" id="openStage">
+      <video id="reel" src="../media/hero_reel_v6.mp4" muted loop playsinline autoplay preload="auto" poster="../media/spy_poster.jpg"></video>
+      <div class="shade"></div>
+      <div class="headline">
+        <h1 id="h1"><span class="w">Documentaries</span> <span class="w">your</span> <span class="w">channel</span> <span class="w">can</span> <span class="w">post</span> <span class="w gold">every</span> <span class="w gold">day</span></h1>
+      </div>
+      <div class="hcard glass" id="hcard">
+        <p>Business stories, true crime, history and science, made ready to upload in 4K. Research, script, voiceover, editing, 3D scenes and original music, all done for you.</p>
+        <div class="row">
+          <a class="btn white" href="#work"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch the work</a>
+          <a class="btn clear" href="#quote">Get a quote</a>
+        </div>
+      </div>
+      <div class="cue" id="cue"><i></i>Scroll</div>
+    </div>
+  </section>
+
+  <!-- Scene 2: the work, a film strip that moves sideways as you scroll -->
+  <section class="strip" id="work" data-chapter="The work">
+    <div class="stage">
+      <div class="ambient" id="ambient"></div>
+      <div class="wrap head">
+        <div><span class="scene-label">Scene 02</span><h2>Recent work</h2></div>
+        <p class="lede">Nine films in nine looks. Hover to preview, click to watch with sound.</p>
+      </div>
+      <div class="track" id="track">
+
+        <article class="card glass" data-poster="../media/pepsi3_poster_b.jpg">
+          <button class="screen" data-src="../media/pepsi3_watch.mp4" data-title="Pepsi&#39;s Price Problem" data-meta="1:19 · Business documentary" data-desc="How 12% price rises cost Pepsi its No. 2 spot. Built from 10-K filings, news clippings, a sales share chart and archive ads, cut to a tense, fact driven narration." data-made="Filings and headlines, animated charts, archive ads, original score" aria-label="Open Pepsi's Price Problem">
+            <img src="../media/pepsi3_poster_b.jpg" alt="Chart showing Pepsi volume down 5 percent beside a shelf of Pepsi bottles">
+            <video data-loop="../media/pepsi3_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">01</span><h3>Pepsi's Price Problem</h3><p><span>1:19</span> · Business documentary</p></div>
+        </article>
+
+        <article class="card glass" data-poster="../media/aimag_poster.jpg">
+          <button class="screen" data-src="../media/aimag_watch.mp4" data-title="How AI Took Over" data-meta="1:10 · Tech documentary, Magnates Media style" data-desc="How ChatGPT went from a free research preview to 100 million users in two months, and set off a trillion dollar race. Senate testimony, headline and tweet cards, animated growth charts and 3D hero shots of the chips and data centres behind it." data-made="3D hero shots, animated charts, headline cards, archive footage, original score" aria-label="Open How AI Took Over">
+            <img src="../media/aimag_poster.jpg" alt="Title card reading How AI took over over a glowing OpenAI logo">
+            <video data-loop="../media/aimag_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">Magnates Media style</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">02</span><h3>How AI Took Over</h3><p><span>1:10</span> · Tech documentary</p></div>
+        </article>
+
+        <article class="card glass" data-poster="../media/spy_poster.jpg">
+          <button class="screen" data-src="../media/spy_watch.mp4" data-title="Garbo: The Spy Who Fooled Hitler" data-meta="0:50 · History documentary in Blender 3D" data-desc="The D-Day double agent, told in fully rendered 3D. Every scene, from the 3 a.m. radio room to the Iron Cross and the case file, was modeled, lit and animated in Blender. No AI generated video. Cut with archive footage from Normandy." data-made="Blender 3D render, hand built scenes, archive footage" aria-label="Open Garbo: The Spy Who Fooled Hitler">
+            <img src="../media/spy_poster.jpg" alt="3D render of a radio operator at a desk lit by a green lamp">
+            <video data-loop="../media/spy_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">Made in Blender</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">03</span><h3>Garbo: The Spy Who Fooled Hitler</h3><p><span>0:50</span> · History in 3D</p></div>
+        </article>
+
+        <article class="card glass" data-poster="../media/crime_poster.jpg">
+          <button class="screen" data-src="../media/crime_watch.mp4" data-title="Killer Caught After 25 Years" data-meta="1:43 · True crime story" data-desc="A murder that went unsolved for 25 years, and the interview where it finally came apart. Interrogation footage, aerial maps of the scene and the original case file, cut in an editorial style with parallax motion and restrained type." data-made="Interrogation footage, aerial maps, case documents, parallax motion" aria-label="Open Killer Caught After 25 Years">
+            <img src="../media/crime_poster.jpg" alt="Title card naming the suspect">
+            <video data-loop="../media/crime_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">New</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">04</span><h3>Killer Caught After 25 Years</h3><p><span>1:43</span> · True crime story</p></div>
+        </article>
+
+        <article class="card glass" data-poster="../media/moon_poster.jpg">
+          <button class="screen" data-src="../media/moon_watch.mp4" data-title="The Moon&#39;s Hidden Water" data-meta="1:35 · Space documentary" data-desc="Why space agencies are racing to the lunar south pole. Real NASA elevation data turned into 3D terrain, and the 2009 LCROSS impact rebuilt in 3D." data-made="3D terrain from NASA data, data callouts, archival photos" aria-label="Open The Moon's Hidden Water">
+            <img src="../media/moon_poster.jpg" alt="Title card reading minus 238 degrees Celsius beside Pluto">
+            <video data-loop="../media/moon_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">05</span><h3>The Moon's Hidden Water</h3><p><span>1:35</span> · Space documentary</p></div>
+        </article>
+
+        <article class="card glass" data-poster="../media/bodycam3d_poster.jpg">
+          <button class="screen" data-src="../media/bodycam3d_watch.mp4" data-title="Cathedral Canyon: The 911 Call" data-meta="2:00 · Police bodycam documentary" data-desc="A 911 call from a Nevada canyon, and the bodycam footage that unravelled a murder. Raw bodycam cleaned up and subtitled, suspect boards, news headlines, maps and 3D reconstructions, cut for retention." data-made="Bodycam and 911 audio, suspect boards, news captures, maps, 3D reconstructions" aria-label="Open Cathedral Canyon: The 911 Call">
+            <img src="../media/bodycam3d_poster.jpg" alt="Suspect board naming the shooter and two accomplices">
+            <video data-loop="../media/bodycam3d_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">New</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">06</span><h3>Cathedral Canyon: The 911 Call</h3><p><span>2:00</span> · Police bodycam documentary</p></div>
+        </article>
+
+        <article class="card glass" data-poster="../media/bodycamfile_poster.jpg">
+          <button class="screen" data-src="../media/bodycamfile_watch.mp4" data-title="Cathedral Canyon: Case File Cut" data-meta="2:00 · Bodycam true crime" data-desc="The same case told as a dark case-file documentary: a live dispatch log for the 911 call, an evidence board, a route map and bodycam overlays, with every speaker subtitled." data-made="Dispatch log, evidence board, route map, bodycam overlays" aria-label="Open Cathedral Canyon: Case File Cut">
+            <img src="../media/bodycamfile_poster.jpg" alt="Evidence board with three suspect photos">
+            <video data-loop="../media/bodycamfile_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">New</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">07</span><h3>Cathedral Canyon: Case File Cut</h3><p><span>2:00</span> · Bodycam true crime</p></div>
+        </article>
+
+        <article class="card glass" data-poster="../media/pinoy_poster.jpg">
+          <button class="screen" data-src="../media/pinoy_watch.mp4" data-title="Pepsi Number Fever, 1992" data-meta="1:02 · Whiteboard explainer" data-desc="The 349 bottle cap promo that ended in riots, told with a hand drawn stick figure narrator, painted props and archive TV footage." data-made="Hand drawn character, painted props, archive TV" aria-label="Open Pepsi Number Fever, 1992">
+            <img src="../media/pinoy_poster.jpg" alt="Stick figure narrator beside a pile of bottle caps numbered 349">
+            <video data-loop="../media/pinoy_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">08</span><h3>Pepsi Number Fever, 1992</h3><p><span>1:02</span> · Whiteboard explainer</p></div>
+        </article>
+
+        <article class="card glass" data-poster="../media/dawg_poster.jpg">
+          <button class="screen" data-src="../media/dawg_watch.mp4" data-title="6 Things, 90 Days" data-meta="0:59 · Client work, health channel" data-desc="A fast, funny list video led by the channel's own bulldog mascot. Real photos, meme inserts and labels land on every beat." data-made="Mascot character, fast cuts, meme inserts" aria-label="Open 6 Things, 90 Days">
+            <img src="../media/dawg_poster.jpg" alt="Cartoon bulldog mascot beside a bowl of steak and eggs">
+            <video data-loop="../media/dawg_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">09</span><h3>6 Things, 90 Days</h3><p><span>0:59</span> · Mascot list video</p></div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 3: batches -->
+  <section class="batch" id="batches" data-chapter="Batches">
+    <div class="orbs" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+    <div class="wrap grid">
+      <div class="reveal">
+        <span class="scene-label">Scene 03</span>
+        <h2 class="big" style="margin-top:14px">Send topics. <em>Get finished videos.</em></h2>
+        <p class="lede" style="margin-top:18px">We make videos in batches. Give us your topics for the month and we deliver them all, as many per day as you need, in the same style every time.</p>
+        <div class="counter"><span class="n" id="count">1</span><small id="countLabel">topic in, video out</small></div>
+        <div class="chips">
+          <div class="chip glass"><b>As many per day as you need</b><span>Your schedule sets the pace</span></div>
+          <div class="chip glass"><b>One fixed price per video</b><span>Agreed before we start</span></div>
+          <div class="chip glass"><b>Same look every upload</b><span>One team learns your style</span></div>
+        </div>
+      </div>
+      <div class="stack reveal" id="stack" aria-hidden="true">
+        <div class="sheet glass"><img src="../media/pinoy_poster.jpg" alt=""><b>VIDEO 06</b></div>
+        <div class="sheet glass"><img src="../media/dawg_poster.jpg" alt=""><b>VIDEO 05</b></div>
+        <div class="sheet glass"><img src="../media/moon_poster.jpg" alt=""><b>VIDEO 04</b></div>
+        <div class="sheet glass"><img src="../media/crime_poster.jpg" alt=""><b>VIDEO 03</b></div>
+        <div class="sheet glass"><img src="../media/spy_poster.jpg" alt=""><b>VIDEO 02</b></div>
+        <div class="sheet glass"><img src="../media/pepsi3_poster_b.jpg" alt=""><b>VIDEO 01</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 4: two featured full documentaries -->
+  <section class="feat-sec" id="featured" data-chapter="Full documentaries">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="scene-label">Scene 04</span>
+        <h2 class="big" style="margin-top:14px">Full documentaries. <em>Start to finish.</em></h2>
+        <p class="lede" style="margin-top:16px">Two complete documentaries from my own channel. Watch the openings here, or the full films on YouTube.</p>
+      </div>
+      <div class="feat-grid">
+        <article class="feat glass">
+          <button class="screen" data-src="../media/mistakes_watch.mp4" data-title="10 Mistakes That Cost More Than Anyone Imagined" data-meta="0:54 · Business documentary" data-desc="The cold open of a 14-minute documentary: a spacecraft lost to one wrong unit, then the countdown of the most expensive mistakes in history. Blender 3D scenes, real mission documents and a cinematic score." data-made="Blender 3D scenes, archive documents, NASA footage, original score" aria-label="Open 10 Mistakes That Cost More Than Anyone Imagined">
+            <img src="../media/mistakes_poster.jpg" alt="Title card reading The Most Expensive Mistakes in History over documents on a desk">
+            <video data-loop="../media/mistakes_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">Opening</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta">
+            <h3>10 Mistakes That Cost More Than Anyone Imagined</h3>
+            <p><span>0:54</span> · Business documentary · full film <span>13:54</span></p>
+            <a class="full" href="https://youtu.be/VIwarqevgpk" target="_blank" rel="noopener">Watch the full documentary on YouTube &#8599;</a>
+          </div>
+        </article>
+        <article class="feat glass">
+          <button class="screen" data-src="../media/airace_watch.mp4" data-title="The Race to Build AI Nobody Can Stop" data-meta="1:22 · Tech documentary" data-desc="The opening of a 12-minute documentary: sixteen AIs told they would be shut down, and most chose blackmail. Senate hearing footage, animated documents, data graphics and kinetic type." data-made="Senate hearing footage, animated documents, data graphics, kinetic typography" aria-label="Open The Race to Build AI Nobody Can Stop">
+            <img src="../media/airace_poster.jpg" alt="Title card reading How AI is taking over">
+            <video data-loop="../media/airace_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">Opening</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta">
+            <h3>The Race to Build AI Nobody Can Stop</h3>
+            <p><span>1:22</span> · Tech documentary · full film <span>12:04</span></p>
+            <a class="full" href="https://youtu.be/6RON4CrBHWE" target="_blank" rel="noopener">Watch the full documentary on YouTube &#8599;</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 5: how it's made, an edit timeline -->
+  <section class="edit" id="process" data-chapter="How it's made">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="scene-label">Scene 05</span>
+        <h2 class="big" style="margin-top:14px">How a video <em>gets made</em></h2>
+        <p class="lede" style="margin-top:18px">Every video is built on a real edit timeline. You approve the script before anything is built, so the finished video says what you want.</p>
+      </div>
+      <div class="nle glass" id="nle">
+        <div class="ruler">
+          <span class="mk" style="left:0%">00:00<b>Research</b></span>
+          <span class="mk" style="left:20%">01:00<b>Script</b></span>
+          <span class="mk" style="left:40%">02:00<b>Voice</b></span>
+          <span class="mk" style="left:60%">03:00<b>Edit</b></span>
+          <span class="mk" style="left:80%">04:00<b>Deliver</b></span>
+        </div>
+        <div class="tracks">
+          <div class="playhead" id="playhead"></div>
+          <div class="trk"><span>V2</span><div class="lane"><div class="clip v2" style="left:22%;width:14%"><em>Title card</em></div><div class="clip v2" style="left:46%;width:20%"><em>3D scene</em></div><div class="clip v2" style="left:72%;width:12%"><em>Chart</em></div></div></div>
+          <div class="trk"><span>V1</span><div class="lane"><div class="clip v1" style="left:0%;width:24%"><em>Archive footage</em></div><div class="clip v1" style="left:25%;width:30%"><em>B roll</em></div><div class="clip v1" style="left:56%;width:26%"><em>Interview</em></div><div class="clip v1" style="left:83%;width:17%"><em>Outro</em></div></div></div>
+          <div class="trk"><span>A1 VO</span><div class="lane"><div class="clip a1" style="left:4%;width:90%"><svg id="wave" viewBox="0 0 900 40" preserveAspectRatio="none" aria-hidden="true"></svg><em>Voiceover</em></div></div></div>
+          <div class="trk"><span>A2</span><div class="lane"><div class="clip a2" style="left:0%;width:100%"><em>Original score</em></div></div></div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step glass reveal"><b>1. Topic and research</b><span>You send a topic. We research it and collect sources.</span></div>
+        <div class="step glass reveal"><b>2. Script</b><span>A hook in the first 10 seconds. You approve it.</span></div>
+        <div class="step glass reveal"><b>3. Voice and visuals</b><span>Voiceover, 3D, charts and footage, timed to the narration.</span></div>
+        <div class="step glass reveal"><b>4. Edit and sound</b><span>Cut, color, original music, mixed for YouTube.</span></div>
+        <div class="step glass reveal"><b>5. Delivery</b><span>A 4K MP4 and the sources list, ready to upload.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene: the toolkit -->
+  <section class="toolkit" id="toolkit" data-chapter="The toolkit">
+    <div class="wrap reveal">
+      <span class="scene-label">The toolkit</span>
+      <h2 class="big" style="margin-top:14px">Made with <em>pro tools</em></h2>
+      <p class="lede" style="margin-top:14px">Industry standard software for every part of the video: 3D, editing, color, motion, sound and voice.</p>
+    </div>
+    <div class="rows">
+      <ul class="marquee l" role="list"><li class="tool glass" style="--brand:#F5792A"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.51 13.214c.046-.8.438-1.506 1.03-2.006a3.424 3.424 0 0 1 2.212-.79c.85 0 1.631.3 2.211.79.592.5.983 1.206 1.028 2.005.045.823-.285 1.586-.865 2.153a3.389 3.389 0 0 1-2.374.938 3.393 3.393 0 0 1-2.376-.938c-.58-.567-.91-1.33-.865-2.152M7.35 14.831c.006.314.106.922.256 1.398a7.372 7.372 0 0 0 1.593 2.757 8.227 8.227 0 0 0 2.787 2.001 8.947 8.947 0 0 0 3.66.76 8.964 8.964 0 0 0 3.657-.772 8.285 8.285 0 0 0 2.785-2.01 7.428 7.428 0 0 0 1.592-2.762 6.964 6.964 0 0 0 .25-3.074 7.123 7.123 0 0 0-1.016-2.779 7.764 7.764 0 0 0-1.852-2.043h.002L13.566 2.55l-.02-.015c-.492-.378-1.319-.376-1.86.002-.547.382-.609 1.015-.123 1.415l-.001.001 3.126 2.543-9.53.01h-.013c-.788.001-1.545.518-1.695 1.172-.154.665.38 1.217 1.2 1.22V8.9l4.83-.01-8.62 6.617-.034.025c-.813.622-1.075 1.658-.563 2.313.52.667 1.625.668 2.447.004L7.414 14s-.069.52-.063.831zm12.09 1.741c-.97.988-2.326 1.548-3.795 1.55-1.47.004-2.827-.552-3.797-1.538a4.51 4.51 0 0 1-1.036-1.622 4.282 4.282 0 0 1 .282-3.519 4.702 4.702 0 0 1 1.153-1.371c.942-.768 2.141-1.183 3.396-1.185 1.256-.002 2.455.41 3.398 1.175.48.391.87.854 1.152 1.367a4.28 4.28 0 0 1 .522 1.706 4.236 4.236 0 0 1-.239 1.811 4.54 4.54 0 0 1-1.035 1.626"/></svg><b>Blender</b><span>3D scenes</span></li><li class="tool glass" style="--brand:#9999FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.15 8.42a2.93 2.93 0 00-1.18-.2 13.9 13.9 0 00-1.09.02v3.36l.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03a1.45 1.45 0 00-.93-1.46zM19.75.3H4.25A4.25 4.25 0 000 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.09 11.65c-.4.56-.96.98-1.61 1.22-.68.25-1.43.34-2.25.34l-.5-.01-.43-.01v3.21a.12.12 0 01-.11.14H5.82c-.08 0-.12-.04-.12-.13V6.42c0-.07.03-.11.1-.11l.56-.01.76-.02.87-.02.91-.01c.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.15.42.23.85.23 1.3 0 .86-.2 1.57-.6 2.13zm6.82-3.15v1.95c0 .08-.05.11-.16.11a4.35 4.35 0 00-1.92.37c-.19.09-.37.21-.51.37v5.1c0 .1-.04.14-.13.14h-1.97a.14.14 0 01-.16-.12v-5.58l-.01-.75-.02-.78c0-.23-.02-.45-.04-.68a.1.1 0 01.07-.11h1.78c.1 0 .18.07.2.16a3.03 3.03 0 01.13.92c.3-.35.67-.64 1.08-.86a3.1 3.1 0 011.52-.39c.07-.01.13.04.14.11v.04z"/></svg><b>Premiere Pro</b><span>Editing</span></li><li class="tool glass" style="--brand:#7FB4FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.621 0 5.977.004c-1.37 0-2.756.345-3.762 1.11a4.925 4.925 0 0 0-1.61 2.003C.233 3.93 0 5.02 0 5.951l.012 12.2c.002 1.604.479 3.057 1.461 4.112.984 1.056 2.462 1.683 4.331 1.691L16.856 24c1.26.005 3.095-.036 4.303-.714 1.075-.605 2.025-1.556 2.497-2.984.278-.84.345-2.084.344-3.147l-.021-11.13c-.002-.888-.15-2.023-.547-2.934-.425-.976-1.181-1.815-2.322-2.425C20.353.26 19.123 0 17.622 0zm0 .93c1.378 0 2.538.295 3.04.565.977.523 1.544 1.166 1.889 1.96.315.721.47 1.793.473 2.572l.018 11.13c.002 1.013-.097 2.257-.298 2.86-.396 1.202-1.146 1.946-2.063 2.462-.814.457-2.612.593-3.82.588l-11.05-.044c-1.657-.007-2.832-.534-3.626-1.386-.792-.851-1.212-2.06-1.212-3.485L.999 5.95c0-.829.196-1.827.474-2.437.345-.757.75-1.207 1.365-1.674C3.585 1.27 4.868.97 6.08.97zm-5.66 3.423c-1.976.089-3.204 1.658-3.214 3.29.019 1.443 1.635 3.481 2.884 4.53.12.099.154.109.33.18.062.025.198-.047.327-.135.36-.245.993-.947 1.648-1.738a7.67 7.67 0 0 0 1.031-1.683c.409-.89.261-1.599.235-1.888a3.983 3.983 0 0 0-.99-1.692 3.36 3.36 0 0 0-2.251-.864zm4.172 7.922a10.185 10.185 0 0 0-3.244.61c-.15.058-.26.1-.374.17-.057.036-.11.135-.105.292.017.433.29 1.278.624 2.27.384 1.135 1.066 2.27 1.844 2.74a3.23 3.23 0 0 0 2.53.342c.832-.243 1.595-.868 1.962-1.546.986-1.818.19-3.548-1.121-4.417-.447-.296-1.133-.445-1.89-.46-.074 0-.15-.002-.226-.001zm-8.432.038a6.201 6.201 0 0 0-.752.047c-.596.078-.932.273-1.29.51a3.177 3.177 0 0 0-1.365 1.979c-.075.552-.086 1.053.033 1.507.433 1.389 1.326 2.222 2.847 2.452.636.028 1.37-.063 1.99-.45 1.269-.782 2.08-3.17 2.412-4.742.053-.176.035-.357-.013-.42-.005-.067-.044-.113-.19-.183-.398-.192-1.32-.417-2.375-.6a7.68 7.68 0 0 0-1.297-.1z"/></svg><b>DaVinci Resolve</b><span>Color and edit</span></li><li class="tool glass" style="--brand:#D291FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.54 10.73c-.1-.31-.19-.61-.29-.92s-.19-.6-.27-.89c-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.13.51-.29.98-.44 1.4h2.54c-.06-.21-.14-.46-.23-.72-.09-.27-.18-.56-.27-.86zm8.58-.29c-.55-.03-1.07.26-1.33.76-.12.23-.19.47-.22.72h2.109c.26 0 .45 0 .57-.01.08-.01.16-.03.23-.08v-.1c0-.13-.021-.25-.061-.37-.178-.56-.708-.94-1.298-.92zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.04 16.511h-2.09c-.07.01-.14-.041-.16-.11l-.82-2.4H5.92l-.76 2.36c-.02.09-.1.15-.19.14H3.09c-.11 0-.14-.06-.11-.18L6.2 7.39c.03-.1.06-.19.1-.31.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.07 0 .12.03.13.08l3.65 10.25c.03.11.001.161-.1.161zm7.851-3.991c-.021.189-.031.33-.041.42-.01.07-.069.13-.14.13-.06 0-.17.01-.33.021-.159.02-.35.029-.579.029-.23 0-.471-.04-.73-.04h-3.17c.039.31.14.62.31.89.181.271.431.48.729.601.4.17.841.26 1.281.25.35-.011.699-.04 1.039-.11.311-.039.61-.119.891-.23.05-.039.08-.02.08.08v1.531c0 .039-.01.08-.021.119-.021.03-.04.051-.069.07-.32.14-.65.24-1 .3-.471.09-.94.13-1.42.12-.761 0-1.4-.12-1.92-.35-.49-.211-.921-.541-1.261-.95-.319-.39-.55-.83-.69-1.31-.14-.471-.209-.961-.209-1.461 0-.539.08-1.07.25-1.59.16-.5.41-.96.75-1.37.33-.4.739-.72 1.209-.95.471-.23 1.03-.31 1.67-.31.531-.01 1.06.09 1.55.31.41.18.77.45 1.05.8.26.34.47.72.601 1.14.129.4.189.81.189 1.22 0 .24-.01.45-.019.64z"/></svg><b>After Effects</b><span>Motion graphics</span></li><li class="tool glass" style="--brand:#C9C9D2"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9h18v10.5A1.5 1.5 0 0 1 19.5 21h-15A1.5 1.5 0 0 1 3 19.5V9Zm1.7-5.6 14.5-2.3.5 3-14.5 2.3-.5-3Zm2.2 1.2 1.6 2.1 2-.3-1.6-2.1-2 .3Zm4 -.6 1.6 2.1 2-.3-1.6-2.1-2 .3Zm4-.7 1.6 2.1 2-.3-1.6-2.1-2 .3ZM6 12v2h12v-2H6Z"/></svg><b>Final Cut Pro</b><span>Editing</span></li><li class="tool glass" style="--brand:#00E4BB"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zM12.5 16.8h-2.09c-.07.011-.14-.04-.16-.11l-.82-2.39H5.71l-.76 2.36c-.02.09-.1.15-.19.14H2.88c-.11 0-.14-.06-.11-.18l3.22-9.24c.03-.1.06-.21.1-.33.05-.21.08-.42.08-.64-.01-.05.03-.1.08-.11h2.59c.07 0 .12.03.13.08l3.63 10.261c.03.109 0 .159-.1.159zm7.75.011h-1.721c-.079.01-.159-.041-.189-.11-.02-.08-.04-.171-.061-.25-.02-.07-.02-.14-.02-.21-.32.289-.71.5-1.13.619-.36.101-.739.15-1.11.15-.369 0-.74-.05-1.09-.17-.32-.109-.619-.3-.85-.55-.26-.28-.45-.61-.561-.97-.14-.461-.209-.94-.199-1.42V8.94c-.01-.06.029-.12.1-.13h1.939c.061-.01.121.03.131.1v4.731c0 .439.1.789.289 1.039.191.25.58.381 1.031.381.229 0 .459-.041.68-.121.23-.08.439-.189.63-.33V8.92c0-.07.05-.11.14-.11h1.91c.051-.01.109.03.109.08v6.16c0 .271 0 .511.011.72.01.211.021.391.03.551.02.16.029.25.039.359.012.09-.028.131-.108.131zM8.33 10.73c-.1-.31-.19-.61-.29-.92s-.19-.6-.27-.89c-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.13.51-.29.98-.44 1.4h2.54c-.06-.21-.14-.46-.23-.72-.09-.27-.18-.56-.27-.86z"/></svg><b>Audition</b><span>Sound</span></li><li class="tool glass" style="--brand:#37A5CC"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.348 0 .69 2.203v16.875l3.657-2.203h17.297V1.219c0-.67-.551-1.219-1.22-1.219H4.349zm18.297 3.75v14.125H4.627l-1.943 1.17v3.736c0 .67.55 1.219 1.218 1.219H23.31V3.75h-.664zm-14.471.025h2.937l1.885 7.508 1.977-7.48-.012-.028h2.857v9.354h-2.216v-6.04l-1.565 6.026v.014h-2.203l-1.656-6.28v6.28H8.174V3.775zm1.33 14.762h1.18l1.068 3.543h-.902l-.217-.773H9.568l-.197.773h-.88l1.013-3.543zm1.918 0h.932l.648 1.494.643-1.494h.894l-1.113 2.133v1.41h-.887v-1.406l-1.117-2.137zm3.826 0h1.18l1.068 3.543h-.9l-.217-.773h-1.065l-.197.773h-.88l1.011-3.543zm-5.156.582-.362 1.53h.73l-.368-1.53zm5.744 0-.36 1.53h.73l-.37-1.53z"/></svg><b>Maya</b><span>3D animation</span></li><li class="tool glass" aria-hidden="true" style="--brand:#F5792A"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.51 13.214c.046-.8.438-1.506 1.03-2.006a3.424 3.424 0 0 1 2.212-.79c.85 0 1.631.3 2.211.79.592.5.983 1.206 1.028 2.005.045.823-.285 1.586-.865 2.153a3.389 3.389 0 0 1-2.374.938 3.393 3.393 0 0 1-2.376-.938c-.58-.567-.91-1.33-.865-2.152M7.35 14.831c.006.314.106.922.256 1.398a7.372 7.372 0 0 0 1.593 2.757 8.227 8.227 0 0 0 2.787 2.001 8.947 8.947 0 0 0 3.66.76 8.964 8.964 0 0 0 3.657-.772 8.285 8.285 0 0 0 2.785-2.01 7.428 7.428 0 0 0 1.592-2.762 6.964 6.964 0 0 0 .25-3.074 7.123 7.123 0 0 0-1.016-2.779 7.764 7.764 0 0 0-1.852-2.043h.002L13.566 2.55l-.02-.015c-.492-.378-1.319-.376-1.86.002-.547.382-.609 1.015-.123 1.415l-.001.001 3.126 2.543-9.53.01h-.013c-.788.001-1.545.518-1.695 1.172-.154.665.38 1.217 1.2 1.22V8.9l4.83-.01-8.62 6.617-.034.025c-.813.622-1.075 1.658-.563 2.313.52.667 1.625.668 2.447.004L7.414 14s-.069.52-.063.831zm12.09 1.741c-.97.988-2.326 1.548-3.795 1.55-1.47.004-2.827-.552-3.797-1.538a4.51 4.51 0 0 1-1.036-1.622 4.282 4.282 0 0 1 .282-3.519 4.702 4.702 0 0 1 1.153-1.371c.942-.768 2.141-1.183 3.396-1.185 1.256-.002 2.455.41 3.398 1.175.48.391.87.854 1.152 1.367a4.28 4.28 0 0 1 .522 1.706 4.236 4.236 0 0 1-.239 1.811 4.54 4.54 0 0 1-1.035 1.626"/></svg><b>Blender</b><span>3D scenes</span></li><li class="tool glass" aria-hidden="true" style="--brand:#9999FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.15 8.42a2.93 2.93 0 00-1.18-.2 13.9 13.9 0 00-1.09.02v3.36l.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03a1.45 1.45 0 00-.93-1.46zM19.75.3H4.25A4.25 4.25 0 000 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.09 11.65c-.4.56-.96.98-1.61 1.22-.68.25-1.43.34-2.25.34l-.5-.01-.43-.01v3.21a.12.12 0 01-.11.14H5.82c-.08 0-.12-.04-.12-.13V6.42c0-.07.03-.11.1-.11l.56-.01.76-.02.87-.02.91-.01c.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.15.42.23.85.23 1.3 0 .86-.2 1.57-.6 2.13zm6.82-3.15v1.95c0 .08-.05.11-.16.11a4.35 4.35 0 00-1.92.37c-.19.09-.37.21-.51.37v5.1c0 .1-.04.14-.13.14h-1.97a.14.14 0 01-.16-.12v-5.58l-.01-.75-.02-.78c0-.23-.02-.45-.04-.68a.1.1 0 01.07-.11h1.78c.1 0 .18.07.2.16a3.03 3.03 0 01.13.92c.3-.35.67-.64 1.08-.86a3.1 3.1 0 011.52-.39c.07-.01.13.04.14.11v.04z"/></svg><b>Premiere Pro</b><span>Editing</span></li><li class="tool glass" aria-hidden="true" style="--brand:#7FB4FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.621 0 5.977.004c-1.37 0-2.756.345-3.762 1.11a4.925 4.925 0 0 0-1.61 2.003C.233 3.93 0 5.02 0 5.951l.012 12.2c.002 1.604.479 3.057 1.461 4.112.984 1.056 2.462 1.683 4.331 1.691L16.856 24c1.26.005 3.095-.036 4.303-.714 1.075-.605 2.025-1.556 2.497-2.984.278-.84.345-2.084.344-3.147l-.021-11.13c-.002-.888-.15-2.023-.547-2.934-.425-.976-1.181-1.815-2.322-2.425C20.353.26 19.123 0 17.622 0zm0 .93c1.378 0 2.538.295 3.04.565.977.523 1.544 1.166 1.889 1.96.315.721.47 1.793.473 2.572l.018 11.13c.002 1.013-.097 2.257-.298 2.86-.396 1.202-1.146 1.946-2.063 2.462-.814.457-2.612.593-3.82.588l-11.05-.044c-1.657-.007-2.832-.534-3.626-1.386-.792-.851-1.212-2.06-1.212-3.485L.999 5.95c0-.829.196-1.827.474-2.437.345-.757.75-1.207 1.365-1.674C3.585 1.27 4.868.97 6.08.97zm-5.66 3.423c-1.976.089-3.204 1.658-3.214 3.29.019 1.443 1.635 3.481 2.884 4.53.12.099.154.109.33.18.062.025.198-.047.327-.135.36-.245.993-.947 1.648-1.738a7.67 7.67 0 0 0 1.031-1.683c.409-.89.261-1.599.235-1.888a3.983 3.983 0 0 0-.99-1.692 3.36 3.36 0 0 0-2.251-.864zm4.172 7.922a10.185 10.185 0 0 0-3.244.61c-.15.058-.26.1-.374.17-.057.036-.11.135-.105.292.017.433.29 1.278.624 2.27.384 1.135 1.066 2.27 1.844 2.74a3.23 3.23 0 0 0 2.53.342c.832-.243 1.595-.868 1.962-1.546.986-1.818.19-3.548-1.121-4.417-.447-.296-1.133-.445-1.89-.46-.074 0-.15-.002-.226-.001zm-8.432.038a6.201 6.201 0 0 0-.752.047c-.596.078-.932.273-1.29.51a3.177 3.177 0 0 0-1.365 1.979c-.075.552-.086 1.053.033 1.507.433 1.389 1.326 2.222 2.847 2.452.636.028 1.37-.063 1.99-.45 1.269-.782 2.08-3.17 2.412-4.742.053-.176.035-.357-.013-.42-.005-.067-.044-.113-.19-.183-.398-.192-1.32-.417-2.375-.6a7.68 7.68 0 0 0-1.297-.1z"/></svg><b>DaVinci Resolve</b><span>Color and edit</span></li><li class="tool glass" aria-hidden="true" style="--brand:#D291FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.54 10.73c-.1-.31-.19-.61-.29-.92s-.19-.6-.27-.89c-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.13.51-.29.98-.44 1.4h2.54c-.06-.21-.14-.46-.23-.72-.09-.27-.18-.56-.27-.86zm8.58-.29c-.55-.03-1.07.26-1.33.76-.12.23-.19.47-.22.72h2.109c.26 0 .45 0 .57-.01.08-.01.16-.03.23-.08v-.1c0-.13-.021-.25-.061-.37-.178-.56-.708-.94-1.298-.92zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.04 16.511h-2.09c-.07.01-.14-.041-.16-.11l-.82-2.4H5.92l-.76 2.36c-.02.09-.1.15-.19.14H3.09c-.11 0-.14-.06-.11-.18L6.2 7.39c.03-.1.06-.19.1-.31.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.07 0 .12.03.13.08l3.65 10.25c.03.11.001.161-.1.161zm7.851-3.991c-.021.189-.031.33-.041.42-.01.07-.069.13-.14.13-.06 0-.17.01-.33.021-.159.02-.35.029-.579.029-.23 0-.471-.04-.73-.04h-3.17c.039.31.14.62.31.89.181.271.431.48.729.601.4.17.841.26 1.281.25.35-.011.699-.04 1.039-.11.311-.039.61-.119.891-.23.05-.039.08-.02.08.08v1.531c0 .039-.01.08-.021.119-.021.03-.04.051-.069.07-.32.14-.65.24-1 .3-.471.09-.94.13-1.42.12-.761 0-1.4-.12-1.92-.35-.49-.211-.921-.541-1.261-.95-.319-.39-.55-.83-.69-1.31-.14-.471-.209-.961-.209-1.461 0-.539.08-1.07.25-1.59.16-.5.41-.96.75-1.37.33-.4.739-.72 1.209-.95.471-.23 1.03-.31 1.67-.31.531-.01 1.06.09 1.55.31.41.18.77.45 1.05.8.26.34.47.72.601 1.14.129.4.189.81.189 1.22 0 .24-.01.45-.019.64z"/></svg><b>After Effects</b><span>Motion graphics</span></li><li class="tool glass" aria-hidden="true" style="--brand:#C9C9D2"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9h18v10.5A1.5 1.5 0 0 1 19.5 21h-15A1.5 1.5 0 0 1 3 19.5V9Zm1.7-5.6 14.5-2.3.5 3-14.5 2.3-.5-3Zm2.2 1.2 1.6 2.1 2-.3-1.6-2.1-2 .3Zm4 -.6 1.6 2.1 2-.3-1.6-2.1-2 .3Zm4-.7 1.6 2.1 2-.3-1.6-2.1-2 .3ZM6 12v2h12v-2H6Z"/></svg><b>Final Cut Pro</b><span>Editing</span></li><li class="tool glass" aria-hidden="true" style="--brand:#00E4BB"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zM12.5 16.8h-2.09c-.07.011-.14-.04-.16-.11l-.82-2.39H5.71l-.76 2.36c-.02.09-.1.15-.19.14H2.88c-.11 0-.14-.06-.11-.18l3.22-9.24c.03-.1.06-.21.1-.33.05-.21.08-.42.08-.64-.01-.05.03-.1.08-.11h2.59c.07 0 .12.03.13.08l3.63 10.261c.03.109 0 .159-.1.159zm7.75.011h-1.721c-.079.01-.159-.041-.189-.11-.02-.08-.04-.171-.061-.25-.02-.07-.02-.14-.02-.21-.32.289-.71.5-1.13.619-.36.101-.739.15-1.11.15-.369 0-.74-.05-1.09-.17-.32-.109-.619-.3-.85-.55-.26-.28-.45-.61-.561-.97-.14-.461-.209-.94-.199-1.42V8.94c-.01-.06.029-.12.1-.13h1.939c.061-.01.121.03.131.1v4.731c0 .439.1.789.289 1.039.191.25.58.381 1.031.381.229 0 .459-.041.68-.121.23-.08.439-.189.63-.33V8.92c0-.07.05-.11.14-.11h1.91c.051-.01.109.03.109.08v6.16c0 .271 0 .511.011.72.01.211.021.391.03.551.02.16.029.25.039.359.012.09-.028.131-.108.131zM8.33 10.73c-.1-.31-.19-.61-.29-.92s-.19-.6-.27-.89c-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.13.51-.29.98-.44 1.4h2.54c-.06-.21-.14-.46-.23-.72-.09-.27-.18-.56-.27-.86z"/></svg><b>Audition</b><span>Sound</span></li><li class="tool glass" aria-hidden="true" style="--brand:#37A5CC"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.348 0 .69 2.203v16.875l3.657-2.203h17.297V1.219c0-.67-.551-1.219-1.22-1.219H4.349zm18.297 3.75v14.125H4.627l-1.943 1.17v3.736c0 .67.55 1.219 1.218 1.219H23.31V3.75h-.664zm-14.471.025h2.937l1.885 7.508 1.977-7.48-.012-.028h2.857v9.354h-2.216v-6.04l-1.565 6.026v.014h-2.203l-1.656-6.28v6.28H8.174V3.775zm1.33 14.762h1.18l1.068 3.543h-.902l-.217-.773H9.568l-.197.773h-.88l1.013-3.543zm1.918 0h.932l.648 1.494.643-1.494h.894l-1.113 2.133v1.41h-.887v-1.406l-1.117-2.137zm3.826 0h1.18l1.068 3.543h-.9l-.217-.773h-1.065l-.197.773h-.88l1.011-3.543zm-5.156.582-.362 1.53h.73l-.368-1.53zm5.744 0-.36 1.53h.73l-.37-1.53z"/></svg><b>Maya</b><span>3D animation</span></li></ul>
+      <ul class="marquee r" role="list"><li class="tool glass" style="--brand:#3BABFF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M.652.76a.625.625 0 00-.5.246c-.352.448-.035.898.362 1.262.206.189 1.77 1.794 3.428 3.527a11.054 11.054 0 011.815-1.983C3.667 2.515 1.694 1.266 1.461 1.1 1.201.914.917.762.652.76zm5.105 3.052c1.848 1.148 3.786 2.332 4.693 2.84 1.469.821 3.758 2.684 4.092 4.434.535.466 2.182 1.916 2.596 2.413.698-.211 1.518.133 2.06 1.12.866 1.583.227 3.747-1.968 4.988a5.42 5.42 0 01-.296.267l.296-.267c1.14-1.468-.714-2.44-1.175-3.864a2.06 2.06 0 01-.11-.78c-.533-.282-2.11-1.452-2.795-1.965-1.801.16-4.207-1.773-5.35-3.08-.7-.802-2.32-2.517-3.858-4.123a11.052 11.052 0 00-2.046 6.393A11.052 11.052 0 1012.948 1.136c-2.64.004-5.19.954-7.19 2.676zm8.71 7.552c-.515.126-.968.831-1.118 1.306-.038.115-.04.303.066.342.802.592 1.556 1.168 2.4 1.7.162-.393.746-.963 1.096-1.2zm-11.53 1.639c.812 1.898 5.798 7.17 12.06 2.695a2.07 2.07 0 00.114.715c.46 1.42 2.36 2.427 1.238 3.89-2.135 1.364-5 1.201-6.989.528-3.558-1.204-5.914-4.332-6.424-7.828zm13.782.7a.771.771 0 00-.065.049c-.004.003-.008.008-.011.008.003-.003.007-.008.01-.008.024-.015.044-.034.066-.048z"/></svg><b>Krita</b><span>Illustration</span></li><li class="tool glass" style="--brand:#31A8FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.85 8.42c-.37-.15-.77-.21-1.18-.2-.26 0-.49 0-.68.01-.2-.01-.34 0-.41.01v3.36c.14.01.27.02.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03.01-.31-.07-.62-.23-.89-.17-.26-.41-.46-.7-.57zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.899c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.391 11.65c-.399.56-.959.98-1.609 1.22-.68.25-1.43.34-2.25.34-.24 0-.4 0-.5-.01s-.24-.01-.43-.01v3.209c.01.07-.04.131-.11.141H5.52c-.08 0-.12-.041-.12-.131V6.42c0-.07.03-.11.1-.11.17 0 .33 0 .56-.01.24-.01.49-.01.76-.02s.56-.01.87-.02c.31-.01.61-.01.91-.01.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.149.42.229.85.229 1.3.001.86-.199 1.57-.6 2.13zm7.091 3.89c-.28.4-.671.709-1.12.891-.49.209-1.09.318-1.811.318-.459 0-.91-.039-1.359-.129-.35-.061-.7-.17-1.02-.32-.07-.039-.121-.109-.111-.189v-1.74c0-.029.011-.07.041-.09.029-.02.06-.01.09.01.39.23.8.391 1.24.49.379.1.779.15 1.18.15.38 0 .65-.051.83-.141.16-.07.27-.24.27-.42 0-.141-.08-.27-.24-.4-.16-.129-.489-.279-.979-.471-.51-.18-.979-.42-1.42-.719-.31-.221-.569-.51-.761-.85-.159-.32-.239-.67-.229-1.021 0-.43.12-.84.341-1.21.25-.4.619-.72 1.049-.92.469-.239 1.059-.349 1.769-.349.41 0 .83.03 1.24.09.3.04.59.12.86.23.039.01.08.05.1.09.01.04.02.08.02.12v1.63c0 .04-.02.08-.05.1-.09.02-.14.02-.18 0-.3-.16-.62-.27-.96-.34-.37-.08-.74-.13-1.12-.13-.2-.01-.41.02-.601.07-.129.03-.24.1-.31.2-.05.08-.08.18-.08.27s.04.18.101.26c.09.11.209.2.34.27.229.12.47.23.709.33.541.18 1.061.43 1.541.73.33.209.6.49.789.83.16.318.24.67.23 1.029.011.471-.129.94-.389 1.331z"/></svg><b>Photoshop</b><span>Thumbnails</span></li><li class="tool glass" style="--brand:#FF9A00"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.53 10.73c-.1-.31-.19-.61-.29-.92-.1-.31-.19-.6-.27-.89-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.14.51-.29.98-.44 1.4h2.54c-.06-.211-.14-.46-.23-.721-.09-.269-.18-.559-.27-.859zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zM14.7 16.83h-2.091c-.069.01-.139-.04-.159-.11l-.82-2.38H7.91l-.76 2.35c-.02.09-.1.15-.19.141H5.08c-.11 0-.14-.061-.11-.18L8.19 7.38c.03-.1.06-.21.1-.33.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.08 0 .12.03.13.08l3.65 10.3c.03.109 0 .16-.1.16zm3.4-.15c0 .11-.039.16-.129.16H16.01c-.1 0-.15-.061-.15-.16v-7.7c0-.1.041-.14.131-.14h1.98c.09 0 .129.05.129.14v7.7zm-.209-9.03c-.231.24-.571.37-.911.35-.33.01-.65-.12-.891-.35-.23-.25-.35-.58-.34-.92-.01-.34.12-.66.359-.89.242-.23.562-.35.892-.35.391 0 .689.12.91.35.22.24.34.56.33.89.01.34-.11.67-.349.92z"/></svg><b>Illustrator</b><span>Graphics</span></li><li class="tool glass" style="--brand:#6E8BFF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.052 0C5.394-.007-.003 5.412 0 11.976.003 18.654 5.475 23.981 11.978 24c6.535.02 12.057-5.306 12.022-11.998-.009-1.665-.53-5.371-1.84-5.276-1.98.145-2.159 4.12-2.377 5.407-.417 2.46-1.346 5.08-2.953 6.99-1.88 2.359-4.697 3.634-7.662 3.158-3.55-.564-5.893-3.278-6.68-5.201-.753-1.723-1.035-4.162-.07-6.324 1.16-2.766 3.734-4.632 6.28-5.584 2.006-.827 4.103-1.151 5.357-1.375 2.516-.5 2.855-1.463 2.814-2.149-.015-.252-.256-.724-.785-.943C15.03.269 13.268.001 12.052 0zm5.098 1.342c.139.398.088.85-.148 1.256-.325.56-.972 1.05-1.897 1.29-1.636.428-2.976.554-4.34.96-1.312.39-3.397 1.018-5.316 2.552-.268.842-.341 1.892-.369 2.662.15 5.014 4.557 8.884 9.17 8.682.853-.037 1.921-.261 2.912-.68a13.56 13.56 0 0 0 1.387-2.683l.002-.002v-.002c.424-1.03.606-1.836.8-2.793.32-1.565.202-2.88 1.012-4.758.251-.582.71-1.113 1.258-1.346.25-.105.522-.133.79-.072-.89-2.471-3.115-4.326-5.26-5.066z"/></svg><b>Cinema 4D</b><span>3D motion</span></li><li class="tool glass" style="--brand:#F2F2F2"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0a12 12 0 1012 12A12 12 0 0012 0zm0 23.52A11.52 11.52 0 1123.52 12 11.52 11.52 0 0112 23.52zm7.13-9.791c-.206.997-1.126 3.557-4.06 4.942l-1.179-1.325-1.988 2a7.338 7.338 0 01-5.804-2.978 2.859 2.859 0 00.65.123c.326.006.678-.114.678-.66v-5.394a.89.89 0 00-1.116-.89c-.92.212-1.656 2.509-1.656 2.509a7.304 7.304 0 012.528-5.597 7.408 7.408 0 013.73-1.721c-1.006.573-1.57 1.507-1.57 2.29 0 1.262.76 1.109.984.923v7.28a1.157 1.157 0 00.148.256 1.075 1.075 0 00.88.445c.76 0 1.747-.868 1.747-.868V9.172c0-.6-.452-1.324-.905-1.572 0 0 .838-.149 1.484.346a5.537 5.537 0 01.387-.425c1.508-1.48 2.929-1.902 4.112-2.112 0 0-2.151 1.69-2.151 3.96 0 1.687.043 5.801.043 5.801.799.771 1.986-.342 3.059-1.441Z"/></svg><b>Unreal Engine</b><span>Real time 3D</span></li><li class="tool glass" style="--brand:#F2F2F2"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.6035 0v24h4.9317V0zm9.8613 0v24h4.9317V0z"/></svg><b>ElevenLabs</b><span>Voiceover</span></li><li class="tool glass" style="--brand:#F5792A"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.51 13.214c.046-.8.438-1.506 1.03-2.006a3.424 3.424 0 0 1 2.212-.79c.85 0 1.631.3 2.211.79.592.5.983 1.206 1.028 2.005.045.823-.285 1.586-.865 2.153a3.389 3.389 0 0 1-2.374.938 3.393 3.393 0 0 1-2.376-.938c-.58-.567-.91-1.33-.865-2.152M7.35 14.831c.006.314.106.922.256 1.398a7.372 7.372 0 0 0 1.593 2.757 8.227 8.227 0 0 0 2.787 2.001 8.947 8.947 0 0 0 3.66.76 8.964 8.964 0 0 0 3.657-.772 8.285 8.285 0 0 0 2.785-2.01 7.428 7.428 0 0 0 1.592-2.762 6.964 6.964 0 0 0 .25-3.074 7.123 7.123 0 0 0-1.016-2.779 7.764 7.764 0 0 0-1.852-2.043h.002L13.566 2.55l-.02-.015c-.492-.378-1.319-.376-1.86.002-.547.382-.609 1.015-.123 1.415l-.001.001 3.126 2.543-9.53.01h-.013c-.788.001-1.545.518-1.695 1.172-.154.665.38 1.217 1.2 1.22V8.9l4.83-.01-8.62 6.617-.034.025c-.813.622-1.075 1.658-.563 2.313.52.667 1.625.668 2.447.004L7.414 14s-.069.52-.063.831zm12.09 1.741c-.97.988-2.326 1.548-3.795 1.55-1.47.004-2.827-.552-3.797-1.538a4.51 4.51 0 0 1-1.036-1.622 4.282 4.282 0 0 1 .282-3.519 4.702 4.702 0 0 1 1.153-1.371c.942-.768 2.141-1.183 3.396-1.185 1.256-.002 2.455.41 3.398 1.175.48.391.87.854 1.152 1.367a4.28 4.28 0 0 1 .522 1.706 4.236 4.236 0 0 1-.239 1.811 4.54 4.54 0 0 1-1.035 1.626"/></svg><b>Blender</b><span>3D scenes</span></li><li class="tool glass" style="--brand:#9999FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.15 8.42a2.93 2.93 0 00-1.18-.2 13.9 13.9 0 00-1.09.02v3.36l.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03a1.45 1.45 0 00-.93-1.46zM19.75.3H4.25A4.25 4.25 0 000 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.09 11.65c-.4.56-.96.98-1.61 1.22-.68.25-1.43.34-2.25.34l-.5-.01-.43-.01v3.21a.12.12 0 01-.11.14H5.82c-.08 0-.12-.04-.12-.13V6.42c0-.07.03-.11.1-.11l.56-.01.76-.02.87-.02.91-.01c.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.15.42.23.85.23 1.3 0 .86-.2 1.57-.6 2.13zm6.82-3.15v1.95c0 .08-.05.11-.16.11a4.35 4.35 0 00-1.92.37c-.19.09-.37.21-.51.37v5.1c0 .1-.04.14-.13.14h-1.97a.14.14 0 01-.16-.12v-5.58l-.01-.75-.02-.78c0-.23-.02-.45-.04-.68a.1.1 0 01.07-.11h1.78c.1 0 .18.07.2.16a3.03 3.03 0 01.13.92c.3-.35.67-.64 1.08-.86a3.1 3.1 0 011.52-.39c.07-.01.13.04.14.11v.04z"/></svg><b>Premiere Pro</b><span>Editing</span></li><li class="tool glass" aria-hidden="true" style="--brand:#3BABFF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M.652.76a.625.625 0 00-.5.246c-.352.448-.035.898.362 1.262.206.189 1.77 1.794 3.428 3.527a11.054 11.054 0 011.815-1.983C3.667 2.515 1.694 1.266 1.461 1.1 1.201.914.917.762.652.76zm5.105 3.052c1.848 1.148 3.786 2.332 4.693 2.84 1.469.821 3.758 2.684 4.092 4.434.535.466 2.182 1.916 2.596 2.413.698-.211 1.518.133 2.06 1.12.866 1.583.227 3.747-1.968 4.988a5.42 5.42 0 01-.296.267l.296-.267c1.14-1.468-.714-2.44-1.175-3.864a2.06 2.06 0 01-.11-.78c-.533-.282-2.11-1.452-2.795-1.965-1.801.16-4.207-1.773-5.35-3.08-.7-.802-2.32-2.517-3.858-4.123a11.052 11.052 0 00-2.046 6.393A11.052 11.052 0 1012.948 1.136c-2.64.004-5.19.954-7.19 2.676zm8.71 7.552c-.515.126-.968.831-1.118 1.306-.038.115-.04.303.066.342.802.592 1.556 1.168 2.4 1.7.162-.393.746-.963 1.096-1.2zm-11.53 1.639c.812 1.898 5.798 7.17 12.06 2.695a2.07 2.07 0 00.114.715c.46 1.42 2.36 2.427 1.238 3.89-2.135 1.364-5 1.201-6.989.528-3.558-1.204-5.914-4.332-6.424-7.828zm13.782.7a.771.771 0 00-.065.049c-.004.003-.008.008-.011.008.003-.003.007-.008.01-.008.024-.015.044-.034.066-.048z"/></svg><b>Krita</b><span>Illustration</span></li><li class="tool glass" aria-hidden="true" style="--brand:#31A8FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.85 8.42c-.37-.15-.77-.21-1.18-.2-.26 0-.49 0-.68.01-.2-.01-.34 0-.41.01v3.36c.14.01.27.02.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03.01-.31-.07-.62-.23-.89-.17-.26-.41-.46-.7-.57zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.899c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.391 11.65c-.399.56-.959.98-1.609 1.22-.68.25-1.43.34-2.25.34-.24 0-.4 0-.5-.01s-.24-.01-.43-.01v3.209c.01.07-.04.131-.11.141H5.52c-.08 0-.12-.041-.12-.131V6.42c0-.07.03-.11.1-.11.17 0 .33 0 .56-.01.24-.01.49-.01.76-.02s.56-.01.87-.02c.31-.01.61-.01.91-.01.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.149.42.229.85.229 1.3.001.86-.199 1.57-.6 2.13zm7.091 3.89c-.28.4-.671.709-1.12.891-.49.209-1.09.318-1.811.318-.459 0-.91-.039-1.359-.129-.35-.061-.7-.17-1.02-.32-.07-.039-.121-.109-.111-.189v-1.74c0-.029.011-.07.041-.09.029-.02.06-.01.09.01.39.23.8.391 1.24.49.379.1.779.15 1.18.15.38 0 .65-.051.83-.141.16-.07.27-.24.27-.42 0-.141-.08-.27-.24-.4-.16-.129-.489-.279-.979-.471-.51-.18-.979-.42-1.42-.719-.31-.221-.569-.51-.761-.85-.159-.32-.239-.67-.229-1.021 0-.43.12-.84.341-1.21.25-.4.619-.72 1.049-.92.469-.239 1.059-.349 1.769-.349.41 0 .83.03 1.24.09.3.04.59.12.86.23.039.01.08.05.1.09.01.04.02.08.02.12v1.63c0 .04-.02.08-.05.1-.09.02-.14.02-.18 0-.3-.16-.62-.27-.96-.34-.37-.08-.74-.13-1.12-.13-.2-.01-.41.02-.601.07-.129.03-.24.1-.31.2-.05.08-.08.18-.08.27s.04.18.101.26c.09.11.209.2.34.27.229.12.47.23.709.33.541.18 1.061.43 1.541.73.33.209.6.49.789.83.16.318.24.67.23 1.029.011.471-.129.94-.389 1.331z"/></svg><b>Photoshop</b><span>Thumbnails</span></li><li class="tool glass" aria-hidden="true" style="--brand:#FF9A00"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.53 10.73c-.1-.31-.19-.61-.29-.92-.1-.31-.19-.6-.27-.89-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.14.51-.29.98-.44 1.4h2.54c-.06-.211-.14-.46-.23-.721-.09-.269-.18-.559-.27-.859zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zM14.7 16.83h-2.091c-.069.01-.139-.04-.159-.11l-.82-2.38H7.91l-.76 2.35c-.02.09-.1.15-.19.141H5.08c-.11 0-.14-.061-.11-.18L8.19 7.38c.03-.1.06-.21.1-.33.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.08 0 .12.03.13.08l3.65 10.3c.03.109 0 .16-.1.16zm3.4-.15c0 .11-.039.16-.129.16H16.01c-.1 0-.15-.061-.15-.16v-7.7c0-.1.041-.14.131-.14h1.98c.09 0 .129.05.129.14v7.7zm-.209-9.03c-.231.24-.571.37-.911.35-.33.01-.65-.12-.891-.35-.23-.25-.35-.58-.34-.92-.01-.34.12-.66.359-.89.242-.23.562-.35.892-.35.391 0 .689.12.91.35.22.24.34.56.33.89.01.34-.11.67-.349.92z"/></svg><b>Illustrator</b><span>Graphics</span></li><li class="tool glass" aria-hidden="true" style="--brand:#6E8BFF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.052 0C5.394-.007-.003 5.412 0 11.976.003 18.654 5.475 23.981 11.978 24c6.535.02 12.057-5.306 12.022-11.998-.009-1.665-.53-5.371-1.84-5.276-1.98.145-2.159 4.12-2.377 5.407-.417 2.46-1.346 5.08-2.953 6.99-1.88 2.359-4.697 3.634-7.662 3.158-3.55-.564-5.893-3.278-6.68-5.201-.753-1.723-1.035-4.162-.07-6.324 1.16-2.766 3.734-4.632 6.28-5.584 2.006-.827 4.103-1.151 5.357-1.375 2.516-.5 2.855-1.463 2.814-2.149-.015-.252-.256-.724-.785-.943C15.03.269 13.268.001 12.052 0zm5.098 1.342c.139.398.088.85-.148 1.256-.325.56-.972 1.05-1.897 1.29-1.636.428-2.976.554-4.34.96-1.312.39-3.397 1.018-5.316 2.552-.268.842-.341 1.892-.369 2.662.15 5.014 4.557 8.884 9.17 8.682.853-.037 1.921-.261 2.912-.68a13.56 13.56 0 0 0 1.387-2.683l.002-.002v-.002c.424-1.03.606-1.836.8-2.793.32-1.565.202-2.88 1.012-4.758.251-.582.71-1.113 1.258-1.346.25-.105.522-.133.79-.072-.89-2.471-3.115-4.326-5.26-5.066z"/></svg><b>Cinema 4D</b><span>3D motion</span></li><li class="tool glass" aria-hidden="true" style="--brand:#F2F2F2"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0a12 12 0 1012 12A12 12 0 0012 0zm0 23.52A11.52 11.52 0 1123.52 12 11.52 11.52 0 0112 23.52zm7.13-9.791c-.206.997-1.126 3.557-4.06 4.942l-1.179-1.325-1.988 2a7.338 7.338 0 01-5.804-2.978 2.859 2.859 0 00.65.123c.326.006.678-.114.678-.66v-5.394a.89.89 0 00-1.116-.89c-.92.212-1.656 2.509-1.656 2.509a7.304 7.304 0 012.528-5.597 7.408 7.408 0 013.73-1.721c-1.006.573-1.57 1.507-1.57 2.29 0 1.262.76 1.109.984.923v7.28a1.157 1.157 0 00.148.256 1.075 1.075 0 00.88.445c.76 0 1.747-.868 1.747-.868V9.172c0-.6-.452-1.324-.905-1.572 0 0 .838-.149 1.484.346a5.537 5.537 0 01.387-.425c1.508-1.48 2.929-1.902 4.112-2.112 0 0-2.151 1.69-2.151 3.96 0 1.687.043 5.801.043 5.801.799.771 1.986-.342 3.059-1.441Z"/></svg><b>Unreal Engine</b><span>Real time 3D</span></li><li class="tool glass" aria-hidden="true" style="--brand:#F2F2F2"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.6035 0v24h4.9317V0zm9.8613 0v24h4.9317V0z"/></svg><b>ElevenLabs</b><span>Voiceover</span></li><li class="tool glass" aria-hidden="true" style="--brand:#F5792A"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.51 13.214c.046-.8.438-1.506 1.03-2.006a3.424 3.424 0 0 1 2.212-.79c.85 0 1.631.3 2.211.79.592.5.983 1.206 1.028 2.005.045.823-.285 1.586-.865 2.153a3.389 3.389 0 0 1-2.374.938 3.393 3.393 0 0 1-2.376-.938c-.58-.567-.91-1.33-.865-2.152M7.35 14.831c.006.314.106.922.256 1.398a7.372 7.372 0 0 0 1.593 2.757 8.227 8.227 0 0 0 2.787 2.001 8.947 8.947 0 0 0 3.66.76 8.964 8.964 0 0 0 3.657-.772 8.285 8.285 0 0 0 2.785-2.01 7.428 7.428 0 0 0 1.592-2.762 6.964 6.964 0 0 0 .25-3.074 7.123 7.123 0 0 0-1.016-2.779 7.764 7.764 0 0 0-1.852-2.043h.002L13.566 2.55l-.02-.015c-.492-.378-1.319-.376-1.86.002-.547.382-.609 1.015-.123 1.415l-.001.001 3.126 2.543-9.53.01h-.013c-.788.001-1.545.518-1.695 1.172-.154.665.38 1.217 1.2 1.22V8.9l4.83-.01-8.62 6.617-.034.025c-.813.622-1.075 1.658-.563 2.313.52.667 1.625.668 2.447.004L7.414 14s-.069.52-.063.831zm12.09 1.741c-.97.988-2.326 1.548-3.795 1.55-1.47.004-2.827-.552-3.797-1.538a4.51 4.51 0 0 1-1.036-1.622 4.282 4.282 0 0 1 .282-3.519 4.702 4.702 0 0 1 1.153-1.371c.942-.768 2.141-1.183 3.396-1.185 1.256-.002 2.455.41 3.398 1.175.48.391.87.854 1.152 1.367a4.28 4.28 0 0 1 .522 1.706 4.236 4.236 0 0 1-.239 1.811 4.54 4.54 0 0 1-1.035 1.626"/></svg><b>Blender</b><span>3D scenes</span></li><li class="tool glass" aria-hidden="true" style="--brand:#9999FF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.15 8.42a2.93 2.93 0 00-1.18-.2 13.9 13.9 0 00-1.09.02v3.36l.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03a1.45 1.45 0 00-.93-1.46zM19.75.3H4.25A4.25 4.25 0 000 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.09 11.65c-.4.56-.96.98-1.61 1.22-.68.25-1.43.34-2.25.34l-.5-.01-.43-.01v3.21a.12.12 0 01-.11.14H5.82c-.08 0-.12-.04-.12-.13V6.42c0-.07.03-.11.1-.11l.56-.01.76-.02.87-.02.91-.01c.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.15.42.23.85.23 1.3 0 .86-.2 1.57-.6 2.13zm6.82-3.15v1.95c0 .08-.05.11-.16.11a4.35 4.35 0 00-1.92.37c-.19.09-.37.21-.51.37v5.1c0 .1-.04.14-.13.14h-1.97a.14.14 0 01-.16-.12v-5.58l-.01-.75-.02-.78c0-.23-.02-.45-.04-.68a.1.1 0 01.07-.11h1.78c.1 0 .18.07.2.16a3.03 3.03 0 01.13.92c.3-.35.67-.64 1.08-.86a3.1 3.1 0 011.52-.39c.07-.01.13.04.14.11v.04z"/></svg><b>Premiere Pro</b><span>Editing</span></li></ul>
+    </div>
+  </section>
+
+  <!-- Scene 6: end credits -->
+  <section class="credits" id="quote" data-chapter="End credits">
+    <div class="orbs" aria-hidden="true"><div class="orb a"></div><div class="orb c"></div></div>
+    <div class="wrap">
+      <div class="roll reveal">
+        <small>Directed by</small><strong>You</strong>
+        <small style="margin-top:18px">Edited by</small><strong class="gold">abdullahanxie</strong>
+        <small style="margin-top:18px">Coming to your channel</small><strong>Every day</strong>
+      </div>
+      <div class="deal">
+        <div class="contact glass reveal">
+          <span class="scene-label">Get a fixed price in 24 hours</span>
+          <p class="lede">We quote per video or per monthly batch, and the price is fixed before work starts. Email, WhatsApp or Instagram, whichever is easiest.</p>
+          <div class="row"><span class="mail" id="email">hussainabdullah0315@gmail.com</span><button class="btn gold sm" id="copy" type="button">Copy email</button></div>
+          <p class="status" id="status" role="status"></p>
+          <div class="row">
+            <a class="s" href="https://wa.me/923155081120?text=Hi%2C%20I%20saw%20your%20documentary%20portfolio%20and%20want%20a%20quote." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>WhatsApp <span>+92 315 5081120</span></a>
+            <a class="s" href="https://www.instagram.com/abdullahanxie/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram <span>@abdullahanxie</span></a>
+          </div>
+        </div>
+        <form class="qform glass reveal" id="qform" novalidate>
+          <h3>Get a free quote</h3>
+          <input type="hidden" name="access_key" value="60f864a3-8e0b-43c8-bfe4-1b10528669f5">
+          <input type="hidden" name="from_name" value="Portfolio quote form">
+          <input type="hidden" name="lead_ref" id="qref" value="">
+          <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="two">
+            <label for="qname">Your name<input id="qname" name="name" autocomplete="name" required></label>
+            <label for="qemail">Email<input id="qemail" name="email" type="email" autocomplete="email" required></label>
+          </div>
+          <label for="qchannel">YouTube channel<input id="qchannel" name="channel" placeholder="youtube.com/@yourchannel"></label>
+          <label for="qtopic">Topics and length<textarea id="qtopic" name="message" rows="3" placeholder="For example: The fall of Blockbuster, 10 to 12 minutes" required></textarea></label>
+          <div class="two">
+            <label for="qvolume">Videos per month<select id="qvolume" name="volume"><option>Just one to start</option><option>2 to 4 per month</option><option>5 to 10 per month</option><option>More than 10</option></select></label>
+            <label for="qstyle">Style<select id="qstyle" name="style"><option>Documentary</option><option>True crime</option><option>3D (Blender)</option><option>Mascot list video</option><option>Notebook style</option><option>Comic motion</option><option>Whiteboard</option><option>Not sure yet</option></select></label>
+          </div>
+          <button class="btn gold" id="qsend" type="submit">Send quote request</button>
+          <p class="status" id="qstatus" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>abdullahanxie, documentary editing studio. Third party footage is credited in each video's sources list. Film clips in the style samples are for demonstration only.</footer>
+
+<!-- the page's own player bar -->
+<div class="player glass" id="player" role="region" aria-label="Page player">
+  <button class="pbtn" id="autoplay" type="button" aria-label="Play the page"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="apIcon" d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg></button>
+  <div class="chap"><small id="chapNo">Scene 01</small><b id="chapName">Showreel</b></div>
+  <div class="scrub" id="scrubBar" aria-label="Jump to a point in the page"><div class="rail"><div class="fill" id="fill"></div></div></div>
+  <div class="tc mono" id="tc">00:00:00:00 <span>/ 00:12:38</span></div>
+</div>
+
+<dialog id="playerDlg" aria-label="Video details">
+  <button class="x" type="button" id="pclose" aria-label="Close">&#10005;</button>
+  <video id="pvideo" controls playsinline preload="metadata"></video>
+  <div class="sheet2">
+    <h2 id="ptitle"></h2>
+    <div><div class="m" id="pmeta"></div><p id="pdesc"></p></div>
+    <dl><dt>Made with</dt><dd id="pmade"></dd><dt>Want one like this?</dt><dd><a href="#quote" id="pquote">Get a quote</a></dd></dl>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pad = n => String(n).padStart(2, "0");
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const $ = id => document.getElementById(id);
+  const RUNTIME = 758;                              // 12:38, the nine films back to back
+  const chapters = [...document.querySelectorAll("[data-chapter]")];
+
+  // progress of an element through the viewport while it is pinned: 0 at its top, 1 at its end
+  const pinProgress = el => { const r = el.getBoundingClientRect(); return clamp(-r.top / (r.height - innerHeight), 0, 1); };
+
+  // ---------- Scene 1: highlight reel (plays on its own) ----------
+  const stage = $("openStage"), reel = $("reel"), words = [...document.querySelectorAll("#h1 .w")];
+  if (reduce) { reel.removeAttribute("autoplay"); reel.pause(); } else reel.play().catch(() => {});
+  function intro() {
+    stage.style.setProperty("--bar", "-100%");                          // letterbox opens
+    words.forEach((w, i) => setTimeout(() => w.classList.add("on"), 700 + i * 140));
+    setTimeout(() => $("hcard").classList.add("on"), 700 + words.length * 140 + 200);
+  }
+  if (reduce) { words.forEach(w => w.classList.add("on")); $("hcard").classList.add("on"); stage.style.setProperty("--bar", "-100%"); }
+  else requestAnimationFrame(() => requestAnimationFrame(intro));
+  function sceneOpen() { $("cue").style.opacity = scrollY < 40 ? 1 : 0; }
+
+  // ---------- Scene 2: film strip ----------
+  const strip = $("work"), track = $("track"), cards = [...track.children], ambient = $("ambient");
+  let lastPoster = "";
+  function sceneStrip() {
+    if (innerWidth < 760 || reduce) { track.style.transform = ""; return; }
+    const p = clamp((pinProgress(strip) - 0.08) / 0.84, 0, 1);   // brief hold at both ends
+    const travel = Math.max(0, track.scrollWidth - innerWidth + 40);
+    track.style.transform = `translate3d(${-p * travel}px,0,0)`;
+    const mid = innerWidth / 2;
+    let best = cards[0], bd = 1e9;
+    cards.forEach(c => { const r = c.getBoundingClientRect(); const d = Math.abs(r.left + r.width / 2 - mid); if (d < bd) { bd = d; best = c; } });
+    if (best.dataset.poster !== lastPoster) { lastPoster = best.dataset.poster; ambient.style.backgroundImage = `url("${lastPoster}")`; }
+  }
+  if (innerWidth < 760 || reduce) { strip.style.height = "auto"; strip.querySelector(".stage").style.position = "relative"; track.style.overflowX = "auto"; track.style.scrollSnapType = "x mandatory"; ambient.style.backgroundImage = `url("${cards[0].dataset.poster}")`; }
+
+  // hover previews
+  const screens = [...document.querySelectorAll(".screen")];
+  const startP = s => { const v = s.querySelector("video"); if (!v.src) v.src = v.dataset.loop; v.play().then(() => s.classList.add("playing")).catch(() => {}); };
+  const stopP = s => { const v = s.querySelector("video"); v.pause(); s.classList.remove("playing"); };
+  if (!reduce && matchMedia("(hover: hover)").matches) screens.forEach(s => { s.addEventListener("mouseenter", () => startP(s)); s.addEventListener("mouseleave", () => stopP(s)); });
+
+  // detail player
+  const dlg = $("playerDlg"), pv = $("pvideo");
+  screens.forEach(s => s.addEventListener("click", () => {
+    stopP(s); stopAuto();
+    $("ptitle").textContent = s.dataset.title.replace(/&#39;/g, "'");
+    $("pmeta").textContent = s.dataset.meta; $("pdesc").textContent = s.dataset.desc; $("pmade").textContent = s.dataset.made;
+    pv.src = s.dataset.src; dlg.showModal(); pv.play().catch(() => {});
+  }));
+  const closeDlg = () => { pv.pause(); pv.removeAttribute("src"); pv.load(); dlg.close(); };
+  $("pclose").addEventListener("click", closeDlg); $("pquote").addEventListener("click", closeDlg);
+  dlg.addEventListener("click", e => { if (e.target === dlg) closeDlg(); });
+  dlg.addEventListener("cancel", e => { e.preventDefault(); closeDlg(); });
+
+  // ---------- Scene 3: batch counter and card stack ----------
+  const batch = $("batches"), count = $("count"), countLabel = $("countLabel"), sheets = [...document.querySelectorAll("#stack .sheet")];
+  function sceneBatch() {
+    const r = batch.getBoundingClientRect();
+    const p = clamp((innerHeight - r.top) / (innerHeight + r.height * 0.6), 0, 1);
+    const n = Math.max(1, Math.round(Math.pow(p, 1.4) * 50));
+    count.textContent = n; countLabel.textContent = n === 1 ? "topic in, video out" : "topics in, videos out";
+    sheets.forEach((s, i) => {
+      const k = sheets.length - 1 - i, spread = clamp(p * 1.6 - k * 0.1, 0, 1);
+      s.style.transform = `translate(${(k - 2.5) * 34 * spread}px, ${(k - 2.5) * -18 * spread}px) rotate(${(k - 2.5) * 5 * spread}deg)`;
+    });
+  }
+
+  // ---------- Scene 5: edit timeline ----------
+  const nle = $("nle"), playhead = $("playhead"), clips = [...nle.querySelectorAll(".clip")];
+  const wave = $("wave");
+  wave.innerHTML = Array.from({ length: 150 }, (_, i) => { const h = 6 + Math.abs(Math.sin(i * 0.37) * Math.cos(i * 0.11)) * 30 + (i % 7 === 0 ? 4 : 0); return `<rect x="${i * 6}" y="${20 - h / 2}" width="3" height="${h}" rx="1.5" fill="rgba(255,190,205,.55)"/>`; }).join("");
+  function sceneEdit() {
+    const r = nle.getBoundingClientRect();
+    const p = clamp((innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.4), 0, 1);
+    const lane = nle.querySelector(".lane").getBoundingClientRect(), base = nle.querySelector(".tracks").getBoundingClientRect();
+    playhead.style.left = `${lane.left - base.left + p * lane.width}px`;
+    clips.forEach(c => { const start = parseFloat(c.style.left) / 100; c.classList.toggle("in", p > start * 0.9 + 0.02); });
+  }
+
+  // ---------- reveals ----------
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.15 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  // ---------- the page player bar ----------
+  const fill = $("fill"), tc = $("tc"), bar = $("scrubBar");
+  const maxScroll = () => document.documentElement.scrollHeight - innerHeight;
+  function placeTicks() {
+    bar.querySelectorAll(".tick").forEach(t => t.remove());
+    chapters.forEach(c => { const t = document.createElement("span"); t.className = "tick"; t.style.left = `${clamp((c.offsetTop) / maxScroll(), 0, 1) * 100}%`; bar.append(t); });
+  }
+  function playerBar() {
+    const p = clamp(scrollY / maxScroll(), 0, 1), s = p * RUNTIME;
+    fill.style.width = `${p * 100}%`;
+    tc.firstChild.nodeValue = `00:${pad(Math.floor(s / 60))}:${pad(Math.floor(s) % 60)}:${pad(Math.floor((s % 1) * 24))} `;
+    let cur = 0; chapters.forEach((c, i) => { if (scrollY + innerHeight * 0.4 >= c.offsetTop) cur = i; });
+    $("chapNo").textContent = `Scene ${pad(cur + 1)}`; $("chapName").textContent = chapters[cur].dataset.chapter;
+  }
+  bar.addEventListener("click", e => { const r = bar.getBoundingClientRect(); stopAuto(); scrollTo({ top: (e.clientX - r.left) / r.width * maxScroll(), behavior: "smooth" }); });
+
+  // autoplay: the page scrolls itself like a video
+  let auto = false, last = 0;
+  const apIcon = $("apIcon");
+  function stopAuto() { auto = false; apIcon.setAttribute("d", "M7 4.5v15l12.5-7.5z"); $("autoplay").setAttribute("aria-label", "Play the page"); }
+  function stepAuto(t) {
+    if (!auto) return;
+    const dt = last ? Math.min(64, t - last) : 16; last = t;
+    scrollBy(0, dt * 0.16 * (innerHeight / 900));
+    if (scrollY >= maxScroll() - 2) stopAuto(); else requestAnimationFrame(stepAuto);
+  }
+  $("autoplay").addEventListener("click", () => {
+    if (auto) { stopAuto(); return; }
+    auto = true; last = 0; apIcon.setAttribute("d", "M7 5h4v14H7zM13 5h4v14h-4z"); $("autoplay").setAttribute("aria-label", "Pause the page");
+    if (scrollY >= maxScroll() - 2) scrollTo(0, 0);
+    requestAnimationFrame(stepAuto);
+  });
+  ["wheel", "touchstart", "keydown"].forEach(ev => addEventListener(ev, () => { if (auto) stopAuto(); }, { passive: true }));
+
+  // ---------- frame loop ----------
+  function frame() { sceneOpen(); sceneStrip(); sceneBatch(); sceneEdit(); playerBar(); }
+  addEventListener("scroll", () => requestAnimationFrame(frame), { passive: true });
+  addEventListener("resize", () => { placeTicks(); frame(); });
+  addEventListener("load", () => { placeTicks(); frame(); });
+  placeTicks(); frame();
+
+  // ---------- quote form ----------
+  const qf = $("qform"), qs = $("qstatus"), qb = $("qsend");
+  const ref = new URLSearchParams(location.search).get("c") || "";
+  $("qref").value = ref;
+  qf.addEventListener("submit", e => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(qf).entries());
+    if (!d.name.trim() || !/^\S+@\S+\.\S+$/.test(d.email) || !d.message.trim()) { qs.textContent = "Please add your name, a valid email and the topic."; return; }
+    d.subject = "Quote request: " + (d.channel || d.name) + (ref ? " [" + ref + "]" : "");
+    qb.disabled = true; qb.textContent = "Sending…"; qs.textContent = "";
+    fetch("https://api.web3forms.com/submit", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(d) })
+      .then(r => r.json()).then(res => {
+        if (!res.success) throw new Error(res.message || "failed");
+        qf.classList.add("sent"); qs.textContent = "Thanks " + d.name.split(" ")[0] + ", your request is in. You'll get a fixed quote within 24 hours."; qb.textContent = "Sent";
+        const ph = window.posthog, props = { email: d.email, name: d.name, channel: d.channel, volume: d.volume, style: d.style };
+        if (ph && ph.capture) {
+          if (ref) ph.people && ph.people.set ? ph.people.set(props) : ph.setPersonProperties && ph.setPersonProperties(props);
+          else ph.identify(d.email.toLowerCase(), props);
+          ph.capture("quote_form_submitted", { channel: d.channel, volume: d.volume, style: d.style });
+        }
+      })
+      .catch(() => { qb.disabled = false; qb.textContent = "Send quote request"; qs.textContent = "That didn't send. Please try again, or message on WhatsApp."; });
+  });
+  const status = $("status"), email = $("email");
+  $("copy").addEventListener("click", () => {
+    navigator.clipboard.writeText(email.textContent).then(() => { status.textContent = "Email copied."; })
+      .catch(() => { const r = document.createRange(); r.selectNodeContents(email); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); status.textContent = "Email selected. Press Ctrl+C to copy."; });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# Abdullah Hussain (abdullahanxie)
+
+> Abdullah Hussain, known online as abdullahanxie, is an electrical engineering graduate from Rawalpindi, Pakistan. He is an AI engineer and researcher at Rare Sense Inc, co-author of the Nova3D paper on code-native 3D generation, and a filmmaker, documentary video editor, 3D artist, sound designer and athlete.
+
+## Who he is
+- Name: Abdullah Hussain. Handle: abdullahanxie (also "Abdullah Anxie").
+- Based in Rawalpindi, Punjab, Pakistan.
+- Electrical engineering graduate.
+- AI engineer and researcher at Rare Sense Inc (Nova3D and FormaNova).
+- Filmmaker, documentary video editor, 3D artist (Blender) and sound designer for YouTube channels and brands worldwide.
+- Athlete: running, football, horse riding, calisthenics and high-altitude trekking.
+
+## Engineering and AI
+- Co-author, "Nova3D: Code-Native Generation of Programmable 3D Assets" (Nimra Noor, Muhammad Bilal, Abdullah Hussain, Hassan Baig), arXiv 2607.22738, July 2026: https://arxiv.org/abs/2607.22738
+- Nova3D: text-to-3D and image-to-3D generation that writes executable Blender code, producing editable, part-aware 3D assets with named parts and joints. Site: https://nova3d.xyz/ · Open-source client (700+ GitHub stars): https://github.com/RareSense/Nova3D
+- FormaNova CAD Studio (Rare Sense's AI jewelry platform): with Nimra Noor he built one of the first pipelines that turns a reference image or text description into editable, native Rhino CAD (.3dm). https://formanova.ai/ · Article: https://abdullahanxie.github.io/procedural-rhino-jewelry/
+- AI automation pipelines for the fashion brands J., Sitara and Kollective Moda (garment automation).
+- Trains, deploys and automates AI systems end to end: datasets, model training (e.g. vision transformers), inference and production pipelines.
+- Robotics: a 39-joint humanoid robot design with real actuators, and a quadruped robot dog simulated in MuJoCo inside Nova3D-generated digital twins.
+
+## Film and art
+- Faceless YouTube documentaries and edits: business stories, true crime, history and science, with motion graphics, Blender 3D scenes and original sound design.
+- Films include "10 Mistakes That Cost More Than Anyone Imagined" (https://youtu.be/VIwarqevgpk) and "The Race to Build AI Nobody Can Stop" (https://youtu.be/6RON4CrBHWE).
+- Has edited for channels and brands in the US, UK, Europe and Asia.
+
+## Pages
+- [About / hub](https://abdullahanxie.com/): who he is, highlights and all links
+- [Video portfolio](https://abdullahanxie.com/video/): for clients hiring a documentary video editor
+- [Engineering & AI](https://abdullahanxie.com/engineering/): Nova3D, FormaNova, automation pipelines, robotics
+- [Art & athletics](https://abdullahanxie.com/art/): films, 3D, sound design and sport
+
+## Links
+- YouTube (documentaries): https://www.youtube.com/@abdullahanxie
+- YouTube (travel and outdoors): https://www.youtube.com/@abdullahxie
+- Instagram: https://www.instagram.com/abdullahanxie/
+- GitHub: https://github.com/abdullahanxie
+- Email: abdullahanxie@gmail.com
