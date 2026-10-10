@@ -13,7 +13,7 @@
 ## Engineering and AI
 - Co-author, "Nova3D: Code-Native Generation of Programmable 3D Assets" (Nimra Noor, Muhammad Bilal, Abdullah Hussain, Hassan Baig), arXiv 2607.22738, July 2026: https://arxiv.org/abs/2607.22738
 - Nova3D: text-to-3D and image-to-3D generation that writes executable Blender code, producing editable, part-aware 3D assets with named parts and joints. Site: https://nova3d.xyz/ · Open-source client (700+ GitHub stars): https://github.com/RareSense/Nova3D
-- FormaNova CAD Studio (Rare Sense's AI jewelry platform): with Nimra Noor he built one of the first pipelines that turns a reference image or text description into editable, native Rhino CAD (.3dm). https://formanova.ai/ · Article: https://abdullahanxie.github.io/procedural-rhino-jewelry/
+- FormaNova CAD Studio (Rare Sense's AI jewelry platform): with Nimra Noor he built one of the first pipelines that turns a reference image or text description into editable, native Rhino CAD (.3dm). CAD Studio: https://formanova.ai/image-to-cad · Article: https://abdullahanxie.github.io/procedural-rhino-jewelry/
 - AI automation pipelines for the fashion brands J., Sitara and Kollective Moda (garment automation).
 - Trains, deploys and automates AI systems end to end: datasets, model training (e.g. vision transformers), inference and production pipelines.
 - Robotics: a 39-joint humanoid robot design with real actuators, and a quadruped robot dog simulated in MuJoCo inside Nova3D-generated digital twins.
