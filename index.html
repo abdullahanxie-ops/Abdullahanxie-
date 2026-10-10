@@ -168,7 +168,19 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .chip b { font-size: .9rem; }
 .chip span { color: var(--muted); font-size: .85rem; }
 
-/* scene 4: split screen */
+/* scene 4: featured full documentaries */
+.feat-sec { position: relative; padding-block: clamp(60px, 7vw, 100px); }
+.feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(18px, 2.5vw, 32px); margin-top: clamp(24px, 3vw, 40px); }
+@media (max-width: 860px) { .feat-grid { grid-template-columns: 1fr; } }
+.feat { padding: 10px; border-radius: 16px; display: grid; gap: 12px; align-content: start; }
+.feat:hover .screen img, .feat:hover .screen video { transform: scale(1.04); }
+.feat .meta { display: grid; gap: 6px; padding: 0 6px 6px; }
+.feat h3 { font-size: clamp(1.15rem, 1.6vw, 1.45rem); font-weight: 700; line-height: 1.25; }
+.feat .meta p { margin: 0; color: var(--muted); font-size: .9rem; }
+.feat .meta p span { font-family: var(--mono); color: #d9d6d0; }
+.feat .full { color: var(--accent); font-weight: 600; font-size: .9rem; text-decoration: none; width: fit-content; }
+.feat .full:hover { text-decoration: underline; }
+/* scene 4 (old): split screen */
 .split-sec { position: relative; padding-block: clamp(60px, 7vw, 100px); }
 .split { position: relative; aspect-ratio: 16 / 9; width: 100%; border-radius: 16px; overflow: hidden; margin-top: 0; cursor: ew-resize; touch-action: pan-y; user-select: none; }
 .split video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -302,7 +314,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
   <a class="brand" href="#top">abdullah<span>anxie</span></a>
   <a class="l" href="#work">Work</a>
   <a class="l" href="#batches">Batches</a>
-  <a class="l" href="#styles">Styles</a>
+  <a class="l" href="#featured">Featured</a>
   <a class="l" href="#process">Process</a>
   <a class="l" href="#toolkit">Tools</a>
   <a class="btn gold sm" href="#quote">Get a quote</a>
@@ -334,7 +346,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
       <div class="ambient" id="ambient"></div>
       <div class="wrap head">
         <div><span class="scene-label">Scene 02</span><h2>Recent work</h2></div>
-        <p class="lede">Ten films in ten looks. Hover to preview, click to watch with sound.</p>
+        <p class="lede">Nine films in nine looks. Hover to preview, click to watch with sound.</p>
       </div>
       <div class="track" id="track">
 
@@ -347,24 +359,14 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
           <div class="meta"><span class="num">01</span><h3>Pepsi's Price Problem</h3><p><span>1:19</span> · Business documentary</p></div>
         </article>
 
-        <article class="card glass" data-poster="media/mistakes_poster.jpg">
-          <button class="screen" data-src="media/mistakes_watch.mp4" data-title="10 Mistakes That Cost More Than Anyone Imagined" data-meta="0:54 · Business documentary" data-desc="The cold open of a 14-minute documentary: a spacecraft lost to one wrong unit, then the countdown of the most expensive mistakes in history. Blender 3D scenes, real mission documents and a cinematic score." data-made="Blender 3D scenes, archive documents, NASA footage, original score" aria-label="Open 10 Mistakes That Cost More Than Anyone Imagined">
-            <img src="media/mistakes_poster.jpg" alt="Title card reading The Most Expensive Mistakes in History over documents on a desk">
-            <video data-loop="media/mistakes_loop.mp4" muted loop playsinline preload="none"></video>
-            <span class="tag glass">New</span>
+        <article class="card glass" data-poster="media/aimag_poster.jpg">
+          <button class="screen" data-src="media/aimag_watch.mp4" data-title="How AI Took Over" data-meta="1:10 · Tech documentary, Magnates Media style" data-desc="How ChatGPT went from a free research preview to 100 million users in two months, and set off a trillion dollar race. Senate testimony, headline and tweet cards, animated growth charts and 3D hero shots of the chips and data centres behind it." data-made="3D hero shots, animated charts, headline cards, archive footage, original score" aria-label="Open How AI Took Over">
+            <img src="media/aimag_poster.jpg" alt="Title card reading How AI took over over a glowing OpenAI logo">
+            <video data-loop="media/aimag_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">Magnates Media style</span>
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
-          <div class="meta"><span class="num">02</span><h3>10 Mistakes That Cost More Than Anyone Imagined</h3><p><span>0:54</span> · Business documentary</p></div>
-        </article>
-
-        <article class="card glass" data-poster="media/airace_poster.jpg">
-          <button class="screen" data-src="media/airace_watch.mp4" data-title="The Race to Build AI Nobody Can Stop" data-meta="1:22 · Tech documentary" data-desc="The opening of a 12-minute documentary: sixteen AIs told they would be shut down, and most chose blackmail. Senate hearing footage, animated documents, data graphics and kinetic type." data-made="Senate hearing footage, animated documents, data graphics, kinetic typography" aria-label="Open The Race to Build AI Nobody Can Stop">
-            <img src="media/airace_poster.jpg" alt="Title card reading How AI is taking over">
-            <video data-loop="media/airace_loop.mp4" muted loop playsinline preload="none"></video>
-            <span class="tag glass">New</span>
-            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
-          </button>
-          <div class="meta"><span class="num">03</span><h3>The Race to Build AI Nobody Can Stop</h3><p><span>1:22</span> · Tech documentary</p></div>
+          <div class="meta"><span class="num">02</span><h3>How AI Took Over</h3><p><span>1:10</span> · Tech documentary</p></div>
         </article>
 
         <article class="card glass" data-poster="media/spy_poster.jpg">
@@ -374,7 +376,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
             <span class="tag glass">Made in Blender</span>
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
-          <div class="meta"><span class="num">04</span><h3>Garbo: The Spy Who Fooled Hitler</h3><p><span>0:50</span> · History in 3D</p></div>
+          <div class="meta"><span class="num">03</span><h3>Garbo: The Spy Who Fooled Hitler</h3><p><span>0:50</span> · History in 3D</p></div>
         </article>
 
         <article class="card glass" data-poster="media/crime_poster.jpg">
@@ -384,7 +386,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
             <span class="tag glass">New</span>
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
-          <div class="meta"><span class="num">05</span><h3>Killer Caught After 25 Years</h3><p><span>1:43</span> · True crime story</p></div>
+          <div class="meta"><span class="num">04</span><h3>Killer Caught After 25 Years</h3><p><span>1:43</span> · True crime story</p></div>
         </article>
 
         <article class="card glass" data-poster="media/moon_poster.jpg">
@@ -393,7 +395,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
             <video data-loop="media/moon_loop.mp4" muted loop playsinline preload="none"></video>
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
-          <div class="meta"><span class="num">06</span><h3>The Moon's Hidden Water</h3><p><span>1:35</span> · Space documentary</p></div>
+          <div class="meta"><span class="num">05</span><h3>The Moon's Hidden Water</h3><p><span>1:35</span> · Space documentary</p></div>
         </article>
 
         <article class="card glass" data-poster="media/bodycam3d_poster.jpg">
@@ -403,7 +405,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
             <span class="tag glass">New</span>
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
-          <div class="meta"><span class="num">07</span><h3>Cathedral Canyon: The 911 Call</h3><p><span>2:00</span> · Police bodycam documentary</p></div>
+          <div class="meta"><span class="num">06</span><h3>Cathedral Canyon: The 911 Call</h3><p><span>2:00</span> · Police bodycam documentary</p></div>
         </article>
 
         <article class="card glass" data-poster="media/bodycamfile_poster.jpg">
@@ -413,7 +415,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
             <span class="tag glass">New</span>
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
-          <div class="meta"><span class="num">08</span><h3>Cathedral Canyon: Case File Cut</h3><p><span>2:00</span> · Bodycam true crime</p></div>
+          <div class="meta"><span class="num">07</span><h3>Cathedral Canyon: Case File Cut</h3><p><span>2:00</span> · Bodycam true crime</p></div>
         </article>
 
         <article class="card glass" data-poster="media/pinoy_poster.jpg">
@@ -422,7 +424,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
             <video data-loop="media/pinoy_loop.mp4" muted loop playsinline preload="none"></video>
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
-          <div class="meta"><span class="num">09</span><h3>Pepsi Number Fever, 1992</h3><p><span>1:02</span> · Whiteboard explainer</p></div>
+          <div class="meta"><span class="num">08</span><h3>Pepsi Number Fever, 1992</h3><p><span>1:02</span> · Whiteboard explainer</p></div>
         </article>
 
         <article class="card glass" data-poster="media/dawg_poster.jpg">
@@ -431,7 +433,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
             <video data-loop="media/dawg_loop.mp4" muted loop playsinline preload="none"></video>
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
-          <div class="meta"><span class="num">10</span><h3>6 Things, 90 Days</h3><p><span>0:59</span> · Mascot list video</p></div>
+          <div class="meta"><span class="num">09</span><h3>6 Things, 90 Days</h3><p><span>0:59</span> · Mascot list video</p></div>
         </article>
 
       </div>
@@ -464,26 +466,41 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
     </div>
   </section>
 
-  <!-- Scene 4: one script, two styles, split screen -->
-  <section class="split-sec" id="styles" data-chapter="Two styles">
-    <div class="wrap split-grid">
-      <div class="split-side">
-        <div class="reveal">
-          <span class="scene-label">Scene 04</span>
-          <h2 class="big" style="margin-top:14px">One script. <em>Two looks.</em></h2>
-          <p class="lede" style="margin-top:16px">The same 90 second script and voice, edited two ways. Drag the line to compare. You hear the side that fills more of the screen.</p>
-        </div>
-        <div class="split-bar glass">
-        <button class="btn white sm" id="trioPlay" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="trioIcon" d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg><span id="trioLabel">Play both</span></button>
-        <input type="range" id="trioSeek" min="0" max="93.5" step="0.1" value="0" aria-label="Position in both videos">
-        <span class="mono" id="trioTc">00:00 / 01:34</span>
+  <!-- Scene 4: two featured full documentaries -->
+  <section class="feat-sec" id="featured" data-chapter="Full documentaries">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="scene-label">Scene 04</span>
+        <h2 class="big" style="margin-top:14px">Full documentaries. <em>Start to finish.</em></h2>
+        <p class="lede" style="margin-top:16px">Two complete documentaries from my own channel. Watch the openings here, or the full films on YouTube.</p>
       </div>
-      </div>
-      <div class="split glass" id="split">
-        <video id="sv0" src="media/notebook_watch.mp4" poster="media/notebook_poster.jpg" playsinline preload="metadata"></video>
-        <video id="sv1" class="right" src="media/dark_watch.mp4" poster="media/dark_poster.jpg" playsinline preload="metadata" muted></video>
-        <span class="lab l glass">Notebook</span><span class="lab r glass">Comic motion</span>
-        <div class="handle"><span class="knob glass" aria-hidden="true">&#8596;</span></div>
+      <div class="feat-grid">
+        <article class="feat glass">
+          <button class="screen" data-src="media/mistakes_watch.mp4" data-title="10 Mistakes That Cost More Than Anyone Imagined" data-meta="0:54 · Business documentary" data-desc="The cold open of a 14-minute documentary: a spacecraft lost to one wrong unit, then the countdown of the most expensive mistakes in history. Blender 3D scenes, real mission documents and a cinematic score." data-made="Blender 3D scenes, archive documents, NASA footage, original score" aria-label="Open 10 Mistakes That Cost More Than Anyone Imagined">
+            <img src="media/mistakes_poster.jpg" alt="Title card reading The Most Expensive Mistakes in History over documents on a desk">
+            <video data-loop="media/mistakes_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">Opening</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta">
+            <h3>10 Mistakes That Cost More Than Anyone Imagined</h3>
+            <p><span>0:54</span> · Business documentary · full film <span>13:54</span></p>
+            <a class="full" href="https://youtu.be/VIwarqevgpk" target="_blank" rel="noopener">Watch the full documentary on YouTube &#8599;</a>
+          </div>
+        </article>
+        <article class="feat glass">
+          <button class="screen" data-src="media/airace_watch.mp4" data-title="The Race to Build AI Nobody Can Stop" data-meta="1:22 · Tech documentary" data-desc="The opening of a 12-minute documentary: sixteen AIs told they would be shut down, and most chose blackmail. Senate hearing footage, animated documents, data graphics and kinetic type." data-made="Senate hearing footage, animated documents, data graphics, kinetic typography" aria-label="Open The Race to Build AI Nobody Can Stop">
+            <img src="media/airace_poster.jpg" alt="Title card reading How AI is taking over">
+            <video data-loop="media/airace_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">Opening</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta">
+            <h3>The Race to Build AI Nobody Can Stop</h3>
+            <p><span>1:22</span> · Tech documentary · full film <span>12:04</span></p>
+            <a class="full" href="https://youtu.be/6RON4CrBHWE" target="_blank" rel="noopener">Watch the full documentary on YouTube &#8599;</a>
+          </div>
+        </article>
       </div>
     </div>
   </section>
@@ -586,7 +603,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
   <button class="pbtn" id="autoplay" type="button" aria-label="Play the page"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="apIcon" d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg></button>
   <div class="chap"><small id="chapNo">Scene 01</small><b id="chapName">Showreel</b></div>
   <div class="scrub" id="scrubBar" aria-label="Jump to a point in the page"><div class="rail"><div class="fill" id="fill"></div></div></div>
-  <div class="tc mono" id="tc">00:00:00:00 <span>/ 00:13:44</span></div>
+  <div class="tc mono" id="tc">00:00:00:00 <span>/ 00:12:38</span></div>
 </div>
 
 <dialog id="playerDlg" aria-label="Video details">
@@ -605,7 +622,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
   const pad = n => String(n).padStart(2, "0");
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const $ = id => document.getElementById(id);
-  const RUNTIME = 824;                              // 13:44, the ten films back to back
+  const RUNTIME = 758;                              // 12:38, the nine films back to back
   const chapters = [...document.querySelectorAll("[data-chapter]")];
 
   // progress of an element through the viewport while it is pinned: 0 at its top, 1 at its end
@@ -669,32 +686,6 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
       s.style.transform = `translate(${(k - 2.5) * 34 * spread}px, ${(k - 2.5) * -18 * spread}px) rotate(${(k - 2.5) * 5 * spread}deg)`;
     });
   }
-
-  // ---------- Scene 4: split screen, synced ----------
-  const split = $("split"), sv = [$("sv0"), $("sv1")], seek = $("trioSeek"), tBtn = $("trioPlay"), tLabel = $("trioLabel"), tIcon = $("trioIcon");
-  let cut = 50, dragging = false, lead = 0;
-  const setCut = x => { const r = split.getBoundingClientRect(); cut = clamp((x - r.left) / r.width * 100, 4, 96); split.style.setProperty("--cut", cut + "%"); const nl = cut >= 50 ? 0 : 1; if (nl !== lead) { lead = nl; sv.forEach((v, j) => v.muted = j !== lead); } };
-  split.addEventListener("pointerdown", e => { dragging = true; split.setPointerCapture(e.pointerId); setCut(e.clientX); });
-  split.addEventListener("pointermove", e => { if (dragging) setCut(e.clientX); });
-  split.addEventListener("pointerup", () => { dragging = false; });
-  sv.forEach((v, j) => v.muted = j !== lead);
-  const playingS = () => !sv[0].paused;
-  const showS = on => { tLabel.textContent = on ? "Pause" : "Play both"; tBtn.setAttribute("aria-pressed", on); tIcon.setAttribute("d", on ? "M7 5h4v14H7zM13 5h4v14h-4z" : "M7 4.5v15l12.5-7.5z"); };
-  tBtn.addEventListener("click", () => {
-    if (playingS()) { sv.forEach(v => v.pause()); showS(false); return; }
-    stopAuto();
-    const t = sv[0].ended ? 0 : sv[0].currentTime; sv.forEach(v => { v.currentTime = t; });
-    Promise.all(sv.map(v => v.play())).then(() => showS(true)).catch(() => { sv.forEach(v => v.pause()); showS(false); });
-  });
-  sv.forEach(v => v.addEventListener("ended", () => { sv.forEach(x => x.pause()); showS(false); }));
-  seek.addEventListener("input", () => sv.forEach(v => { v.currentTime = +seek.value; }));
-  (function syncS() {
-    const t = sv[0].currentTime;
-    if (playingS() && Math.abs(sv[1].currentTime - t) > 0.12) sv[1].currentTime = t;
-    if (document.activeElement !== seek) seek.value = t;
-    $("trioTc").textContent = `${pad(Math.floor(t / 60))}:${pad(Math.floor(t) % 60)} / 01:34`;
-    requestAnimationFrame(syncS);
-  })();
 
   // ---------- Scene 5: edit timeline ----------
   const nle = $("nle"), playhead = $("playhead"), clips = [...nle.querySelectorAll(".clip")];
