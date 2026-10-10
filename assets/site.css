@@ -155,3 +155,13 @@ footer a:hover { color: var(--fg); }
 .masonry { columns: 3 280px; column-gap: clamp(10px, 1.4vw, 18px); }
 .masonry figure { break-inside: avoid; margin: 0 0 clamp(10px, 1.4vw, 18px); }
 .masonry img { width: 100%; height: auto; background: var(--bg-2); }
+
+/* NMPC feature: sticky role column + justified photo rows (equal heights, natural ratios, no cropping) */
+.nmpc { display: grid; grid-template-columns: minmax(280px, .8fr) 1.6fr; gap: clamp(28px, 4.5vw, 80px); align-items: start; }
+.nmpc-side { position: sticky; top: 110px; }
+.nmpc-photos { display: grid; gap: clamp(10px, 1.4vw, 18px); }
+.jrow { display: flex; gap: clamp(10px, 1.4vw, 18px); align-items: flex-start; }
+.jrow figure { flex-basis: 0; min-width: 0; margin: 0; }
+.jrow img { width: 100%; height: auto; display: block; background: var(--bg-2); }
+@media (max-width: 900px) { .nmpc { grid-template-columns: 1fr; } .nmpc-side { position: static; } }
+@media (max-width: 560px) { .jrow { flex-wrap: wrap; } .jrow figure { flex: 1 1 100% !important; } }
