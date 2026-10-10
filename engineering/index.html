@@ -24,7 +24,7 @@
 ]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="../assets/hub.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230c0f12'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23f5b544'/%3E%3C/svg%3E">
 <script src="../assets/app.js"></script>
@@ -33,87 +33,78 @@
 <nav class="nav" aria-label="Site">
   <a class="brand" href="../">abdullah<span>anxie</span></a>
   <a class="l" href="../">About</a>
-  <a class="l" href="./" aria-current="page">Engineering &amp; AI</a>
+  <a class="l" href="../engineering/" aria-current="page">Engineering &amp; AI</a>
   <a class="l" href="../art/">Art &amp; athletics</a>
   <a class="cta" href="../video/">Video portfolio</a>
 </nav>
 
 <main>
-  <section class="hero">
-    <div class="wrap">
-      <span class="eyebrow">Engineering &amp; AI</span>
-      <h1 style="margin-top:18px">I build AI that <em>makes things.</em></h1>
-      <p class="lede">I'm an electrical engineering graduate and an AI engineer and researcher at Rare Sense Inc. I work on systems that turn text and images into editable 3D models and CAD, automation pipelines for real businesses, and robots that are designed and tested in simulation before anything is built. I train models, automate workflows and build pipelines end to end.</p>
-      <div class="btns">
-        <a class="btn primary" href="https://arxiv.org/abs/2607.22738" rel="noopener">Nova3D paper</a>
-        <a class="btn" href="https://nova3d.xyz/" rel="noopener">nova3d.xyz</a>
-        <a class="btn" href="https://formanova.ai/image-to-cad" rel="noopener">FormaNova CAD Studio</a>
-        <a class="btn" href="https://github.com/abdullahanxie" rel="me noopener">GitHub</a>
+  <header class="masthead">
+    <div class="wrap grid">
+      <div>
+        <span class="scribble">the engineering side ↓</span>
+        <h1 style="margin-top:14px">I build AI that <em>makes things.</em></h1>
+        <p class="lede">I'm an electrical engineering graduate and an AI engineer and researcher at Rare Sense Inc. I work on systems that turn text and images into editable 3D models and CAD, automation pipelines for real businesses, and robots that are designed and tested in simulation before anything is built. I train models, automate workflows and build pipelines end to end.</p>
+        <div class="btns"><a class="btn primary" href="https://arxiv.org/abs/2607.22738" rel="noopener">Nova3D paper</a><a class="btn" href="https://nova3d.xyz/" rel="noopener">nova3d.xyz</a><a class="btn" href="https://formanova.ai/image-to-cad" rel="noopener">FormaNova CAD Studio</a><a class="btn" href="https://github.com/abdullahanxie" rel="me noopener">GitHub</a></div>
+      </div>
+      <div class="collage" aria-label="Engineering snapshots">
+        <figure class="polaroid p1 tape"><img src="../media/eng_ring.jpg" alt="Ring generated as editable CAD"><figcaption>image → CAD</figcaption></figure>
+        <figure class="polaroid p2 tape t2"><img src="../media/eng_humanoid.jpg" alt="Humanoid robot" style="object-position:20% 50%"><figcaption>humanoid v1</figcaption></figure>
+        <figure class="polaroid p3 tape t3"><img src="../media/eng_go2.jpg" alt="Robot dog in simulation"><figcaption>robot dog, MuJoCo</figcaption></figure>
+        <figure class="polaroid p4"><img src="../media/eng_cadpipe.jpg" alt="Image and text to jewelry CAD pipeline" style="object-fit:contain;background:#f5f3ee"><figcaption>the pipeline</figcaption></figure>
+        <div class="note blue">train ✦ automate ✦ ship</div>
       </div>
     </div>
-  </section>
+  </header>
 
-  <section id="nova3d">
+  <section class="board" id="nova3d">
     <div class="wrap">
-      <span class="eyebrow">Research · Nova3D</span>
-      <h2 style="margin-top:14px">3D assets that are <em>code,</em> not meshes.</h2>
-      <p class="lede">Co-author of <a href="https://arxiv.org/abs/2607.22738" rel="noopener"><b>Nova3D: Code-Native Generation of Programmable 3D Assets</b></a> with Nimra Noor, Muhammad Bilal and Hassan Baig (arXiv 2607.22738, July 2026). Nova3D generates text-to-3D and image-to-3D assets by writing executable Blender code. The compiled GLB keeps named parts, a real assembly hierarchy, joints and edit handles from the start, so nothing has to be rebuilt later through segmentation or rigging.</p>
+      <div class="board-head"><div><span class="kicker">Research · Nova3D</span><h2 style="margin-top:8px">3D assets that are <em>code,</em> not meshes.</h2>
+        <p>Co-author of <a href="https://arxiv.org/abs/2607.22738" rel="noopener"><b>Nova3D: Code-Native Generation of Programmable 3D Assets</b></a> with Nimra Noor, Muhammad Bilal and Hassan Baig (arXiv 2607.22738, July 2026). Nova3D generates text-to-3D and image-to-3D assets by writing executable Blender code. The compiled GLB keeps named parts, a real assembly hierarchy, joints and edit handles from the start, so nothing has to be rebuilt later through segmentation or rigging.</p></div></div>
       <div class="stats">
         <div class="stat"><b>54 / 54</b><span>benchmark items produced a valid program and asset</span></div>
         <div class="stat"><b>51 / 52</b><span>numeric and count constraints from prompts satisfied</span></div>
         <div class="stat"><b>59</b><span>working joints across 12 assets, 98.3% geometric validity</span></div>
         <div class="stat"><b>700+</b><span>GitHub stars on the open-source Nova3D client</span></div>
       </div>
-      <p class="muted" style="margin-top:16px">Compared against eleven baselines from mesh, part-structured, code-native and CAD families on the Nova3D-Bench benchmark. Code: <a href="https://github.com/RareSense/Nova3D" rel="noopener">github.com/RareSense/Nova3D</a>.</p>
+      <p class="hand" style="font-size:1.35rem;margin-top:16px;color:var(--ink-2)">compared against eleven baselines from mesh, part-structured, code-native and CAD families · code: <a href="https://github.com/RareSense/Nova3D" rel="noopener">github.com/RareSense/Nova3D</a></p>
     </div>
   </section>
 
-  <section id="cad">
+  <section class="board" id="cad">
     <div class="wrap split">
       <div>
-        <span class="eyebrow">FormaNova · image &amp; text to CAD</span>
-        <h2 style="margin-top:14px">From a photo to <em>editable CAD.</em></h2>
+        <span class="kicker">FormaNova · image &amp; text to CAD</span>
+        <h2 style="margin-top:8px">From a photo to <em>editable CAD.</em></h2>
         <p class="lede">Together with Nimra Noor, I built one of the first pipelines that turns a reference image or a text description of a ring into editable, native Rhino CAD (.3dm). The design is read, the CAD is built procedurally, then validated and corrected automatically, so every stone, prong and band arrives as its own editable object, not a fused mesh.</p>
         <p>This powers the CAD side of <a href="https://formanova.ai/image-to-cad" rel="noopener"><b>FormaNova CAD Studio</b></a>, Rare Sense's AI jewelry platform, which also creates AI jewelry photoshoots. The full story is in my article <a href="https://abdullahanxie.github.io/procedural-rhino-jewelry/" rel="noopener">From procedural rings to native Rhino CAD</a>.</p>
       </div>
-      <figure>
-        <div class="media contain" style="aspect-ratio:3/2"><img src="../media/eng_ring.jpg" alt="Ring generated as editable Rhino CAD, shown in top, perspective, front and side views" loading="lazy"></div>
-        <figcaption>A ring generated from an image or text brief, delivered as editable Rhino CAD.</figcaption>
-      </figure>
+      <figure class="polaroid tape" style="transform:rotate(1.5deg)"><img src="../media/eng_ring.jpg" alt="Ring generated as editable Rhino CAD, shown in top, perspective, front and side views" style="aspect-ratio:3/2;object-fit:contain;background:#f5f3ee"><figcaption>a ring from an image or text brief, as editable Rhino CAD</figcaption></figure>
     </div>
   </section>
 
-  <section id="automation">
+  <section class="board" id="automation">
     <div class="wrap">
-      <span class="eyebrow">AI automation</span>
-      <h2 style="margin-top:14px">Pipelines for <em>real brands.</em></h2>
-      <p class="lede">I design AI systems that do a whole job, not a single step: data collection and cleaning, model training, inference, validation and delivery, running automatically.</p>
-      <div class="grid g3">
-        <div class="card"><span class="tag">Fashion</span><h3>Garment automation for J., Sitara and Kollective Moda</h3><p>Automation pipelines for fashion brands' garment imagery and production workflows.</p></div>
-        <div class="card"><span class="tag">Jewelry</span><h3>Image and text to jewelry CAD</h3><p>Procedural CAD generation with automatic validation and correction, exporting native Rhino files.</p></div>
-        <div class="card"><span class="tag">Visualisation</span><h3>Pipeline recording studio</h3><p>A Three.js app that animates the Nova3D image-to-3D pipeline stage by stage (point cloud, mesh reveal, tri-view, exploded parts) for demos and papers.</p></div>
-        <div class="card"><span class="tag">Models</span><h3>Training and inference</h3><p>Vision transformer classification, inference tooling and dataset pipelines (see <a href="https://github.com/abdullahanxie" rel="noopener">GitHub</a>).</p></div>
-        <div class="card"><span class="tag">Social</span><h3>Social media posting automation</h3><p>Automated content scheduling and posting across platforms.</p></div>
-        <div class="card"><span class="tag">3D</span><h3>Text-to-3D and image-to-3D</h3><p>Generation pipelines that output structured, editable 3D with parts and joints, ready for games, XR and simulation.</p></div>
+      <div class="board-head"><div><span class="kicker">AI automation</span><h2 style="margin-top:8px">Pipelines for <em>real brands.</em></h2><p>AI systems that do a whole job, not a single step: data collection and cleaning, model training, inference, validation and delivery, running automatically.</p></div><span class="count">6 pins</span></div>
+      <div class="masonry" style="columns:3 250px">
+        <div class="pin card terra r1"><span class="kicker">Fashion</span><h3>Garment automation for J., Sitara and Kollective Moda</h3><p>Automation pipelines for fashion brands' garment imagery and production workflows.</p></div>
+        <a class="pin " href="https://abdullahanxie.github.io/procedural-rhino-jewelry/" rel="noopener"><div class="img" style="aspect-ratio:16/9"><img src="../media/eng_cadpipe.jpg" alt="Image and text to jewelry CAD pipeline" loading="lazy"></div><div class="body"><span class="kicker">Jewelry</span><h3>Image and text to jewelry CAD</h3><p>Procedural CAD with automatic validation and correction, exporting native Rhino files.</p></div></a>
+        <div class="pin card mustard"><span class="kicker">Visualisation</span><h3>Pipeline recording studio</h3><p>A Three.js app that animates the Nova3D image-to-3D pipeline stage by stage (point cloud, mesh reveal, tri-view, exploded parts) for demos and papers.</p></div>
+        <div class="pin card sky r2"><span class="kicker">Models</span><h3>Training and inference</h3><p>Vision transformer classification, inference tooling and dataset pipelines (see <a href="https://github.com/abdullahanxie" rel="noopener">GitHub</a>).</p></div>
+        <div class="pin card blush"><span class="kicker">Social</span><h3>Social media posting automation</h3><p>Automated content scheduling and posting across platforms.</p></div>
+        <div class="pin card ink"><span class="kicker">3D</span><h3>Text-to-3D and image-to-3D</h3><p>Generation pipelines that output structured, editable 3D with parts and joints, ready for games, XR and simulation.</p></div>
       </div>
     </div>
   </section>
 
-  <section id="robotics">
+  <section class="board" id="robotics">
     <div class="wrap">
-      <span class="eyebrow">Robotics</span>
-      <h2 style="margin-top:14px">Robots, designed and <em>tested in simulation.</em></h2>
-      <div class="grid g2">
-        <figure>
-          <div class="media"><video src="../media/eng_go2.mp4" poster="../media/eng_go2.jpg" muted loop playsinline controls preload="none" aria-label="Robot dog walking through Nova3D-generated worlds"></video></div>
-          <figcaption><b>Robot dog in a Nova3D digital twin.</b> A quadruped robot simulated in MuJoCo, walking through riverbanks, warehouses, offices and rough ground generated with Nova3D.</figcaption>
-        </figure>
-        <figure>
-          <div class="media"><video src="../media/eng_humanoid.mp4" poster="../media/eng_humanoid.jpg" muted loop playsinline controls preload="none" aria-label="Humanoid robot driving each motor in turn"></video></div>
-          <figcaption><b>Humanoid robot, every motor.</b> A 39-joint humanoid design built from real actuators (RobStride RS04 joints, ROBOTIS XC330 finger servos), with each motor driven in turn to check its range and mechanism.</figcaption>
-        </figure>
+      <div class="board-head"><div><span class="kicker">Robotics</span><h2 style="margin-top:8px">Robots, tested <em>in simulation.</em></h2></div><span class="count">2 videos</span></div>
+      <div class="masonry" style="columns:2 320px">
+        <figure class="pin tape" style="margin-top:14px"><div class="img" style="aspect-ratio:16/9"><video src="../media/eng_go2.mp4" poster="../media/eng_go2.jpg" muted loop playsinline controls preload="none" aria-label="Robot dog walking through Nova3D-generated worlds"></video></div><figcaption class="body"><span class="kicker">MuJoCo · Nova3D</span><h3>Robot dog in a Nova3D digital twin</h3><p>A quadruped robot simulated in MuJoCo, walking through riverbanks, warehouses, offices and rough ground generated with Nova3D.</p></figcaption></figure>
+        <figure class="pin tape t2" style="margin-top:14px"><div class="img" style="aspect-ratio:16/9"><video src="../media/eng_humanoid.mp4" poster="../media/eng_humanoid.jpg" muted loop playsinline controls preload="none" aria-label="Humanoid robot driving each motor in turn"></video></div><figcaption class="body"><span class="kicker">Humanoid · 39 joints</span><h3>Every motor, one by one</h3><p>A humanoid design built from real actuators (RobStride RS04 joints, ROBOTIS XC330 finger servos), with each motor driven in turn to check its range and mechanism.</p></figcaption></figure>
       </div>
-      <ul class="list" style="margin-top:26px">
+      <ul class="list" style="margin-top:18px">
         <li>Full humanoid program: joints, motors with real weights, battery and electronics, covers, and simulations for standing, falling, collisions and motor torque.</li>
         <li>Digital twins of real spaces built with Nova3D, used to test robots before deployment.</li>
         <li>Physics simulation in MuJoCo, CAD and rendering in Blender.</li>
@@ -121,26 +112,24 @@
     </div>
   </section>
 
-  <section id="links">
+  <section class="board" id="links">
     <div class="wrap">
-      <span class="eyebrow">Links</span>
-      <h2 style="margin-top:14px">Papers, products, <em>code.</em></h2>
-      <div class="links">
+      <div class="board-head"><div><span class="kicker">Links</span><h2 style="margin-top:8px">Papers, products, <em>code.</em></h2></div></div>
+      <div class="linkpins"><a href="https://github.com/abdullahanxie" rel="me noopener"><b>GitHub</b><span>github.com/abdullahanxie</span></a>
         <a href="https://arxiv.org/abs/2607.22738" rel="noopener"><b>Nova3D paper</b><span>arxiv.org/abs/2607.22738</span></a>
         <a href="https://nova3d.xyz/" rel="noopener"><b>Nova3D</b><span>nova3d.xyz</span></a>
-        <a href="https://github.com/RareSense/Nova3D" rel="noopener"><b>Nova3D on GitHub</b><span>github.com/RareSense/Nova3D</span></a>
         <a href="https://formanova.ai/image-to-cad" rel="noopener"><b>FormaNova CAD Studio</b><span>formanova.ai/image-to-cad</span></a>
         <a href="https://abdullahanxie.github.io/procedural-rhino-jewelry/" rel="noopener"><b>Article · image to jewelry CAD</b><span>abdullahanxie.github.io/procedural-rhino-jewelry</span></a>
-        <a href="https://github.com/abdullahanxie" rel="me noopener"><b>My GitHub</b><span>github.com/abdullahanxie</span></a>
-      </div>
+        <a href="mailto:abdullahanxie@gmail.com"><b>Email</b><span>abdullahanxie@gmail.com</span></a></div>
     </div>
   </section>
 </main>
 
+<hr class="stitch">
 <footer>
   <div class="wrap">
-    <span>© 2026 Abdullah Hussain · abdullahanxie</span>
-    <span><a href="../">About</a> · <a href="../video/">Video</a> · <a href="../art/">Art &amp; athletics</a> · <a href="mailto:abdullahanxie@gmail.com">abdullahanxie@gmail.com</a></span>
+    <span class="sig">— abdullahanxie</span>
+    <span>© 2026 Abdullah Hussain · <a href="../">About</a> · <a href="../video/">Video</a> · <a href="../engineering/">Engineering &amp; AI</a> · <a href="../art/">Art &amp; athletics</a> · <a href="mailto:abdullahanxie@gmail.com">abdullahanxie@gmail.com</a></span>
   </div>
 </footer>
 </body>
