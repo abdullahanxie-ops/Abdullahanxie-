@@ -334,7 +334,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
       <div class="ambient" id="ambient"></div>
       <div class="wrap head">
         <div><span class="scene-label">Scene 02</span><h2>Recent work</h2></div>
-        <p class="lede">Seven films in seven looks. Hover to preview, click to watch with sound.</p>
+        <p class="lede">Nine films in nine looks. Hover to preview, click to watch with sound.</p>
       </div>
       <div class="track" id="track">
 
@@ -402,6 +402,26 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
             <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
           </button>
           <div class="meta"><span class="num">07</span><h3>Pepsi Number Fever, 1992</h3><p><span>1:02</span> · Whiteboard explainer</p></div>
+        </article>
+
+        <article class="card glass" data-poster="media/bodycam3d_poster.jpg">
+          <button class="screen" data-src="media/bodycam3d_watch.mp4" data-title="Cathedral Canyon: The 911 Call" data-meta="2:00 · Police bodycam documentary" data-desc="A 911 call from a Nevada canyon, and the bodycam footage that unravelled a murder. Raw bodycam cleaned up and subtitled, suspect boards, news headlines, maps and 3D reconstructions, cut for retention." data-made="Bodycam and 911 audio, suspect boards, news captures, maps, 3D reconstructions" aria-label="Open Cathedral Canyon: The 911 Call">
+            <img src="media/bodycam3d_poster.jpg" alt="Suspect board naming the shooter and two accomplices">
+            <video data-loop="media/bodycam3d_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">New</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">08</span><h3>Cathedral Canyon: The 911 Call</h3><p><span>2:00</span> · Police bodycam documentary</p></div>
+        </article>
+
+        <article class="card glass" data-poster="media/bodycamfile_poster.jpg">
+          <button class="screen" data-src="media/bodycamfile_watch.mp4" data-title="Cathedral Canyon: Case File Cut" data-meta="2:00 · Bodycam true crime" data-desc="The same case told as a dark case-file documentary: a live dispatch log for the 911 call, an evidence board, a route map and bodycam overlays, with every speaker subtitled." data-made="Dispatch log, evidence board, route map, bodycam overlays" aria-label="Open Cathedral Canyon: Case File Cut">
+            <img src="media/bodycamfile_poster.jpg" alt="Evidence board with three suspect photos">
+            <video data-loop="media/bodycamfile_loop.mp4" muted loop playsinline preload="none"></video>
+            <span class="tag glass">New</span>
+            <span class="play glass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>Watch</span>
+          </button>
+          <div class="meta"><span class="num">09</span><h3>Cathedral Canyon: Case File Cut</h3><p><span>2:00</span> · Bodycam true crime</p></div>
         </article>
 
       </div>
@@ -556,7 +576,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
   <button class="pbtn" id="autoplay" type="button" aria-label="Play the page"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="apIcon" d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg></button>
   <div class="chap"><small id="chapNo">Scene 01</small><b id="chapName">Showreel</b></div>
   <div class="scrub" id="scrubBar" aria-label="Jump to a point in the page"><div class="rail"><div class="fill" id="fill"></div></div></div>
-  <div class="tc mono" id="tc">00:00:00:00 <span>/ 00:08:38</span></div>
+  <div class="tc mono" id="tc">00:00:00:00 <span>/ 00:12:38</span></div>
 </div>
 
 <dialog id="playerDlg" aria-label="Video details">
@@ -575,7 +595,7 @@ dialog video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #0
   const pad = n => String(n).padStart(2, "0");
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const $ = id => document.getElementById(id);
-  const RUNTIME = 518;                              // 8:38, the seven films back to back
+  const RUNTIME = 758;                              // 12:38, the nine films back to back
   const chapters = [...document.querySelectorAll("[data-chapter]")];
 
   // progress of an element through the viewport while it is pinned: 0 at its top, 1 at its end
